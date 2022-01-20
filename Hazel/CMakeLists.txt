@@ -44,6 +44,7 @@ source_group("Source Files" FILES ${${PROJ_LIB_NAME}_SOURCE_FILES})
 include_directories(
   Dependencies/GLFW/include
   Dependencies/GLEW/include
+  vendor/spdlog/include
 )
 
 if(OS_MACOSX)
@@ -72,7 +73,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 add_library(${PROJ_LIB_NAME} SHARED
   ${${PROJ_LIB_NAME}_HEADER_FILES}
   ${${PROJ_LIB_NAME}_SOURCE_FILES}
- "src/Hazel.h" "src/Hazel/EntryPoint.h")
+ "src/Hazel.h" "src/Hazel/EntryPoint.h" "src/Hazel/Log.h" "src/Hazel/Log.cpp")
 
 # TODO: Add tests and install targets if needed.
 generate_export_header(${PROJ_LIB_NAME}
