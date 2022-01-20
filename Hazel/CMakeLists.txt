@@ -77,7 +77,7 @@ add_library(${PROJ_LIB_NAME} SHARED
 # TODO: Add tests and install targets if needed.
 generate_export_header(${PROJ_LIB_NAME}
   EXPORT_MACRO_NAME ${PROJECT_NAME}Exports
-  EXPORT_FILE_NAME ${CMAKE_SOURCE_DIR}/Hazel/Hazel/src/${PROJECT_NAME}Exports.h
+  EXPORT_FILE_NAME ${CMAKE_SOURCE_DIR}/Hazel/src/Hazel/${PROJECT_NAME}Exports.h
 )
 
 target_link_libraries(${PROJ_LIB_NAME} PRIVATE
