@@ -1,16 +1,11 @@
-﻿#pragma once
+#pragma once
 
-#include "HazelExports.h"
+// For use Hazel applicaions
 
-namespace Hazel
-{
+#include "Hazel/Application.h"
 
-  class HazelExports Test
-  {
-  public:
-    Test();
+// ---Entry Point------------------------------------------------
 
-    void Print();
-  };
+#include "Hazel/EntryPoint.h"
 
-}
+// --------------------------------------------------------------
