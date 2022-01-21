@@ -1,7 +1,7 @@
 ﻿# CMakeList.txt : CMake project for Hazel, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required (VERSION 3.16)
 
 set(PROJ_LIB_NAME "hazel_lib")
 
@@ -44,6 +44,7 @@ source_group("Source Files" FILES ${${PROJ_LIB_NAME}_SOURCE_FILES})
 include_directories(
   Dependencies/GLFW/include
   Dependencies/GLEW/include
+  src
 )
 
 if(OS_MACOSX)
@@ -72,6 +73,10 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 add_library(${PROJ_LIB_NAME} SHARED
   ${${PROJ_LIB_NAME}_HEADER_FILES}
   ${${PROJ_LIB_NAME}_SOURCE_FILES}
+)
+
+target_precompile_headers(${PROJ_LIB_NAME} PRIVATE
+  src/hzpch.h
 )
 
 # TODO: Add tests and install targets if needed.

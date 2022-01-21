@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required (VERSION 3.16)
 
 file(GLOB_RECURSE ${PROJECT_NAME_U}_HEADER_FILES src/*.h *.hpp)
 file(GLOB_RECURSE ${PROJECT_NAME_U}_SOURCE_FILES src/*.cpp)
