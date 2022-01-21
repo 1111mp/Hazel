@@ -1,10 +1,15 @@
 ﻿# CMakeList.txt : Top-level CMake project file, do global configuration
 # and include sub-projects here.
 #
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.10)
 
-project ("Hazel")
+project (Hazel CXX)
+
+include_directories(
+  Thirdparty/spdlog/include
+)
 
 # Include sub-projects.
-add_subdirectory ("Hazel")
-add_subdirectory ("Sandbox")
+add_subdirectory(Thirdparty)
+add_subdirectory(Hazel)
+add_subdirectory(Sandbox)
