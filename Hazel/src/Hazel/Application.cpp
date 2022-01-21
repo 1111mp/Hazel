@@ -1,6 +1,4 @@
-﻿#include "Application.h"
-
-#include <GLFW/glfw3.h>
+#include "Application.h"
 
 #include "Events/ApplicationEvent.h"
 #include "Log.h"
@@ -9,7 +7,7 @@ namespace Hazel
 {
 
   Application::Application() {
-    std::cout << glfwInit() << std::endl;
+		
   }
 
   Application::~Application() {}

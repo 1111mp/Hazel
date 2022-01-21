@@ -6,6 +6,10 @@
 /build
 /bin
 /out
+HazelExports.h
+
+# Xcode
+*.DS_Store
 
 # User-specific files
 *.rsuser

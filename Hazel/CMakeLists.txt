@@ -51,12 +51,14 @@ if(OS_MACOSX)
 	if((${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") OR (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64"))
     message("OS_MACOSX_ARM64, using ${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-arm64")
     link_directories(
-      Dependencies/GLFW/lib-x86_64
+      Dependencies/GLFW/lib-arm64
+      Dependencies/GLEW/lib
     )
   else()
     message("OS_MACOSX, using ${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-x86_64")
 	  link_directories(
 		  Dependencies/GLFW/lib-x86_64
+      Dependencies/GLEW/lib
 	  )
   endif()
 elseif(OS_WINDOWS)
@@ -85,7 +87,14 @@ generate_export_header(${PROJ_LIB_NAME}
   EXPORT_FILE_NAME ${CMAKE_SOURCE_DIR}/Hazel/src/Hazel/${PROJECT_NAME}Exports.h
 )
 
-target_link_libraries(${PROJ_LIB_NAME} PRIVATE
-	glfw3
-  glew32s
-)
+if(OS_MACOSX)
+  target_link_libraries(${PROJ_LIB_NAME} PRIVATE
+    glfw3
+    GLEW
+  )
+else()
+  target_link_libraries(${PROJ_LIB_NAME} PRIVATE
+    glfw3
+    glew32s
+  )
+endif()
