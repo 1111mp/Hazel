@@ -49,15 +49,9 @@ include_directories(
 
 if(OS_MACOSX)
 	if((${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") OR (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64"))
-    message("OS_MACOSX_ARM64, using ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib")
-    # link_directories(
-    #   ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib
-    # )
+    message("---------------OS_MACOSX_ARM64---------------")
   else()
-    message("OS_MACOSX, using ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib")
-	  # link_directories(
-    #   ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib
-	  # )
+    message("-------------------OS_MACOSX-----------------")
   endif()
 elseif(OS_WINDOWS)
 	message("OS_WINDOWS, using {PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-vc2022")
@@ -87,14 +81,16 @@ generate_export_header(${PROJ_LIB_NAME}
 
 if(OS_MACOSX)
   # https://www.glfw.org/docs/latest/build_guide.html#build_link_cmake_package
-  message(STATUS "glfw3---------------opengl")
+  # brew install glfw glew
+  message(STATUS "glfw3------------opengl----------glew")
   find_package(glfw3 3.3 REQUIRED)
   find_package(OpenGL REQUIRED)
+  find_package(GLEW REQUIRED)
 
   target_link_libraries(${PROJ_LIB_NAME}
     glfw 
-    ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib/libglew32s.a
     OpenGL::GL
+    GLEW::GLEW
   )
 
 else()
