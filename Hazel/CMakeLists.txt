@@ -35,31 +35,29 @@ if(NOT DEFINED PROJECT_ARCH)
   endif()
 endif()
 
-file(GLOB_RECURSE ${PROJ_LIB_NAME}_HEADER_FILES src/*.h *.hpp)
-file(GLOB_RECURSE ${PROJ_LIB_NAME}_SOURCE_FILES src/*.cpp *.cpp)
+file(GLOB_RECURSE ${PROJ_LIB_NAME}_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h *.hpp)
+file(GLOB_RECURSE ${PROJ_LIB_NAME}_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp *.cpp)
 
 source_group("Header Files" FILES ${${PROJ_LIB_NAME}_HEADER_FILES})
 source_group("Source Files" FILES ${${PROJ_LIB_NAME}_SOURCE_FILES})
 
 include_directories(
-  Dependencies/GLFW/include
-  Dependencies/GLEW/include
-  src
+  ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 if(OS_MACOSX)
 	if((${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") OR (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64"))
-    message("OS_MACOSX_ARM64, using ${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-arm64")
-    link_directories(
-      Dependencies/GLFW/lib-arm64
-      Dependencies/GLEW/lib
-    )
+    message("OS_MACOSX_ARM64, using ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib")
+    # link_directories(
+    #   ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib
+    # )
   else()
-    message("OS_MACOSX, using ${PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-x86_64")
-	  link_directories(
-		  Dependencies/GLFW/lib-x86_64
-      Dependencies/GLEW/lib
-	  )
+    message("OS_MACOSX, using ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib")
+	  # link_directories(
+    #   ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib
+	  # )
   endif()
 elseif(OS_WINDOWS)
 	message("OS_WINDOWS, using {PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-vc2022")
@@ -78,20 +76,27 @@ add_library(${PROJ_LIB_NAME} SHARED
 )
 
 target_precompile_headers(${PROJ_LIB_NAME} PRIVATE
-  src/hzpch.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/hzpch.h
 )
 
 # TODO: Add tests and install targets if needed.
 generate_export_header(${PROJ_LIB_NAME}
   EXPORT_MACRO_NAME ${PROJECT_NAME}Exports
-  EXPORT_FILE_NAME ${CMAKE_SOURCE_DIR}/Hazel/src/Hazel/${PROJECT_NAME}Exports.h
+  EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/src/Hazel/${PROJECT_NAME}Exports.h
 )
 
 if(OS_MACOSX)
-  target_link_libraries(${PROJ_LIB_NAME} PRIVATE
-    glfw3
-    GLEW
+  # https://www.glfw.org/docs/latest/build_guide.html#build_link_cmake_package
+  message(STATUS "glfw3---------------opengl")
+  find_package(glfw3 3.3 REQUIRED)
+  find_package(OpenGL REQUIRED)
+
+  target_link_libraries(${PROJ_LIB_NAME}
+    glfw 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib/libglew32s.a
+    OpenGL::GL
   )
+
 else()
   target_link_libraries(${PROJ_LIB_NAME} PRIVATE
     glfw3
