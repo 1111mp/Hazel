@@ -42,7 +42,7 @@ source_group("Header Files" FILES ${${PROJ_LIB_NAME}_HEADER_FILES})
 source_group("Source Files" FILES ${${PROJ_LIB_NAME}_SOURCE_FILES})
 
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/include
+  # ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/include
   ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/include
   ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
@@ -50,13 +50,14 @@ include_directories(
 if(OS_MACOSX)
 	if((${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") OR (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64"))
     message("---------------OS_MACOSX_ARM64---------------")
+    # link_directories(${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib)
   else()
     message("-------------------OS_MACOSX-----------------")
   endif()
 elseif(OS_WINDOWS)
 	message("OS_WINDOWS, using {PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-vc2022")
 	link_directories(
-		Dependencies/GLFW/lib-vc2022
+		# Dependencies/GLFW/lib-vc2022
 		Dependencies/GLEW/lib
 	)
 endif()
@@ -69,7 +70,7 @@ add_library(${PROJ_LIB_NAME} SHARED
   ${${PROJ_LIB_NAME}_SOURCE_FILES}
 )
 
-target_precompile_headers(${PROJ_LIB_NAME} PRIVATE
+target_precompile_headers(${PROJ_LIB_NAME} PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/hzpch.h
 )
 
@@ -83,19 +84,21 @@ if(OS_MACOSX)
   # https://www.glfw.org/docs/latest/build_guide.html#build_link_cmake_package
   # brew install glfw glew
   message(STATUS "glfw3------------opengl----------glew")
-  find_package(glfw3 3.3 REQUIRED)
-  find_package(OpenGL REQUIRED)
+  # find_package(glfw3 REQUIRED)
+  # find_package(OpenGL REQUIRED)
   find_package(GLEW REQUIRED)
+  # find_library(GLEW_LIB glew32s ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib)
 
   target_link_libraries(${PROJ_LIB_NAME}
     glfw 
-    OpenGL::GL
+    # OpenGL::GL
     GLEW::GLEW
+    # ${GLEW_LIB}
   )
 
 else()
   target_link_libraries(${PROJ_LIB_NAME} PRIVATE
-    glfw3
+    glfw
     glew32s
   )
 endif()
