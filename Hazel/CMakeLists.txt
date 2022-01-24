@@ -3,6 +3,10 @@
 #
 cmake_minimum_required (VERSION 3.16)
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
+set(CMAKE_CXX_FLAGS_DIST "${CMAKE_CXX_FLAGS_RELEASE} /MD")
+
 set(PROJ_LIB_NAME "hazel_lib")
 
 include(GenerateExportHeader)
@@ -89,7 +93,7 @@ if(OS_MACOSX)
   find_package(GLEW REQUIRED)
   # find_library(GLEW_LIB glew32s ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib)
 
-  target_link_libraries(${PROJ_LIB_NAME}
+  target_link_libraries(${PROJ_LIB_NAME} PRIVATE
     ${OPENGL_LIBRARIES}
     glfw 
     # OpenGL::GL
