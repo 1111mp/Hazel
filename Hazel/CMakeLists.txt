@@ -85,11 +85,12 @@ if(OS_MACOSX)
   # brew install glfw glew
   message(STATUS "glfw3------------opengl----------glew")
   # find_package(glfw3 REQUIRED)
-  # find_package(OpenGL REQUIRED)
+  find_package(OpenGL REQUIRED)
   find_package(GLEW REQUIRED)
   # find_library(GLEW_LIB glew32s ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib)
 
   target_link_libraries(${PROJ_LIB_NAME}
+    ${OPENGL_LIBRARIES}
     glfw 
     # OpenGL::GL
     GLEW::GLEW
@@ -97,7 +98,10 @@ if(OS_MACOSX)
   )
 
 else()
+  find_package(OpenGL REQUIRED)
+
   target_link_libraries(${PROJ_LIB_NAME} PRIVATE
+    ${OPENGL_LIBRARIES}
     glfw
     glew32s
   )
