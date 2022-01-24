@@ -1,5 +1,6 @@
 message(STATUS "################Add Module Thgirdparty################")
 
+add_subdirectory(glad)
 add_subdirectory(spdlog)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

@@ -9,6 +9,8 @@ set(CMAKE_CXX_FLAGS_DIST "${CMAKE_CXX_FLAGS_RELEASE} /MD")
 
 set(PROJ_LIB_NAME "hazel_lib")
 
+add_compile_definitions(GLFW_INCLUDE_NONE)
+
 include(GenerateExportHeader)
 
 # Determine the platform.
@@ -46,9 +48,8 @@ source_group("Header Files" FILES ${${PROJ_LIB_NAME}_HEADER_FILES})
 source_group("Source Files" FILES ${${PROJ_LIB_NAME}_SOURCE_FILES})
 
 include_directories(
-  # ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/include
   ${CMAKE_CURRENT_SOURCE_DIR}/src
+  ${CMAKE_SOURCE_DIR}/Thirdparty/Glad/include
 )
 
 if(OS_MACOSX)
@@ -60,10 +61,6 @@ if(OS_MACOSX)
   endif()
 elseif(OS_WINDOWS)
 	message("OS_WINDOWS, using {PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-vc2022")
-	link_directories(
-		# Dependencies/GLFW/lib-vc2022
-		Dependencies/GLEW/lib
-	)
 endif()
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
@@ -90,15 +87,15 @@ if(OS_MACOSX)
   message(STATUS "glfw3------------opengl----------glew")
   # find_package(glfw3 REQUIRED)
   find_package(OpenGL REQUIRED)
-  find_package(GLEW REQUIRED)
+  # find_package(GLEW REQUIRED)
   # find_library(GLEW_LIB glew32s ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib)
 
   target_link_libraries(${PROJ_LIB_NAME} PRIVATE
     ${OPENGL_LIBRARIES}
-    glfw 
-    # OpenGL::GL
-    GLEW::GLEW
-    # ${GLEW_LIB}
+    glfw
+    Glad
+    # GLEW::GLEW
+    # GLEW_LIB
   )
 
 else()
@@ -107,6 +104,6 @@ else()
   target_link_libraries(${PROJ_LIB_NAME} PRIVATE
     ${OPENGL_LIBRARIES}
     glfw
-    glew32s
+    Glad
   )
 endif()
