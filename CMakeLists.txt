@@ -35,10 +35,10 @@ if(OS_MACOSX)
   endif()
 elseif(OS_WINDOWS)
 	message("-------------------OS_WINDOWS-----------------")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
-  set(CMAKE_CXX_FLAGS_DIST "${CMAKE_CXX_FLAGS_RELEASE} /MD")
 endif()
+
+# https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_RUNTIME_LIBRARY.html#:~:text=CMAKE_MSVC_RUNTIME_LIBRARY%20%C2%B6%20New%20in%20version%203.15.%20Select%20the,the%20try_compile%20%28%29%20command%20into%20the%20test%20project.
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL$<$<CONFIG:Debug>:Debug>")
 
 # Determine the project architecture.
 if(NOT DEFINED PROJECT_ARCH)

@@ -18,6 +18,7 @@ source_group("Source Files" FILES ${${PROJ_LIB_NAME}_SOURCE_FILES})
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_SOURCE_DIR}/Thirdparty/Glad/include
+  ${CMAKE_SOURCE_DIR}/Thirdparty/imgui/backends
 )
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
@@ -26,6 +27,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 add_library(${PROJ_LIB_NAME} SHARED
   ${${PROJ_LIB_NAME}_HEADER_FILES}
   ${${PROJ_LIB_NAME}_SOURCE_FILES}
+  ${CMAKE_SOURCE_DIR}/Thirdparty/imgui/backends/imgui_impl_glfw.cpp
 )
 
 target_precompile_headers(${PROJ_LIB_NAME} PUBLIC
