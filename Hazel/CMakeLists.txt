@@ -9,37 +9,6 @@ add_compile_definitions(GLFW_INCLUDE_NONE)
 
 include(GenerateExportHeader)
 
-# Determine the platform.
-if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
-  message("It's OS_MACOSX!")
-  set(OS_MACOSX 1)
-  set(OS_POSIX 1)
-elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-  message("It's OS_LINUX!")
-  set(OS_LINUX 1)
-  set(OS_POSIX 1)
-elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
-  message("It's OS_WINDOWS!")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
-  set(CMAKE_CXX_FLAGS_DIST "${CMAKE_CXX_FLAGS_RELEASE} /MD")
-  set(OS_WINDOWS 1)
-endif()
-
-# Determine the project architecture.
-if(NOT DEFINED PROJECT_ARCH)
-  if(CMAKE_SIZEOF_VOID_P MATCHES 8)
-    set(PROJECT_ARCH "x86_64")
-  else()
-    set(PROJECT_ARCH "x86")
-  endif()
-
-  if(OS_MACOSX)
-    # PROJECT_ARCH should be specified on Mac OS X.
-    message(WARNING "MacOS arch directory is Out!")
-  endif()
-endif()
-
 file(GLOB_RECURSE ${PROJ_LIB_NAME}_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h *.hpp)
 file(GLOB_RECURSE ${PROJ_LIB_NAME}_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp *.cpp)
 
@@ -50,17 +19,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_SOURCE_DIR}/Thirdparty/Glad/include
 )
-
-if(OS_MACOSX)
-	if((${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64") OR (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64"))
-    message("---------------OS_MACOSX_ARM64---------------")
-    # link_directories(${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib)
-  else()
-    message("-------------------OS_MACOSX-----------------")
-  endif()
-elseif(OS_WINDOWS)
-	message("OS_WINDOWS, using {PROJECT_SOURCE_DIR}/Dependencies/GLFW/lib-vc2022")
-endif()
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
@@ -93,6 +51,7 @@ if(OS_MACOSX)
     ${OPENGL_LIBRARIES}
     glfw
     Glad
+    imgui
     # GLEW::GLEW
     # GLEW_LIB
   )
@@ -104,5 +63,6 @@ else()
     ${OPENGL_LIBRARIES}
     glfw
     Glad
+    imgui
   )
 endif()
