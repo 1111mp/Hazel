@@ -104,24 +104,31 @@ void WindowsWindow::Init(const WindowProps& props)
 		switch (action) {
 			case GLFW_PRESS:
 			{
-				KeyPressedEvent event(key, 0);
+				KeyPressedEvent event(key, scancode, 0);
 				data.EventCallback(event);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				KeyReleasedEvent event(key);
+				KeyReleasedEvent event(key, scancode);
 				data.EventCallback(event);
 				break;
 			}
 			case GLFW_REPEAT:
 			{
-				KeyPressedEvent event(key, 1);
+        KeyPressedEvent event(key, scancode, 1);
 				data.EventCallback(event);
 				break;
 			}
 		}
 	});
+
+  glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode) {
+		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+		KeyTypedEvent event(keycode);
+    data.EventCallback(event);
+  });
 	
 	// mouse pressed
 	glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods){
@@ -147,7 +154,7 @@ void WindowsWindow::Init(const WindowProps& props)
 	glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset){
 		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 		
-		MouseScrolledEvent event(xoffset, yoffset);
+		MouseScrolledEvent event((float)xoffset, (float)yoffset);
 		data.EventCallback(event);
 	});
 	
@@ -155,7 +162,7 @@ void WindowsWindow::Init(const WindowProps& props)
 	glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos){
 		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 		
-		MouseMovedEvent event(xpos, ypos);
+		MouseMovedEvent event((float)xpos, (float)ypos);
 		data.EventCallback(event);
 	});
 }
