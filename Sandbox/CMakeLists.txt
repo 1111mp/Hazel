@@ -10,14 +10,20 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/Hazel/src
 )
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+# set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 add_executable(${PROJECT_NAME}
   ${${PROJECT_NAME_U}_HEADER_FILES}
   ${${PROJECT_NAME_U}_SOURCE_FILES}
 )
 
+find_package(OpenGL REQUIRED)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
-  spdlog::spdlog
   hazel_lib
+  spdlog::spdlog
+  ${OPENGL_LIBRARIES}
+  glfw
+  Glad
+  imgui
 )

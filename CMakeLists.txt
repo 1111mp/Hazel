@@ -38,7 +38,7 @@ elseif(OS_WINDOWS)
 endif()
 
 # https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_RUNTIME_LIBRARY.html#:~:text=CMAKE_MSVC_RUNTIME_LIBRARY%20%C2%B6%20New%20in%20version%203.15.%20Select%20the,the%20try_compile%20%28%29%20command%20into%20the%20test%20project.
-# set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # Determine the project architecture.
 if(NOT DEFINED PROJECT_ARCH)
@@ -59,8 +59,10 @@ if(CMAKE_BUILD_TYPE AND (CMAKE_BUILD_TYPE STREQUAL "Debug"))
 endif()
 
 include_directories(
+  Thirdparty/Glad/include
   Thirdparty/spdlog/include
   Thirdparty/imgui
+  Thirdparty/glm
 )
 
 # Include sub-projects.
