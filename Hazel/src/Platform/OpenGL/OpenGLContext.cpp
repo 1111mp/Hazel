@@ -16,6 +16,12 @@ namespace Hazel {
     glfwMakeContextCurrent(m_WindowHandle);
     int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     HZ_CORE_ASSERT(status, "Failed to initialize glad!");
+
+    HZ_HAZEL_INFO(glGetString(GL_VERSION));
+
+    GLint nrAttributes;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+    HZ_HAZEL_INFO("Maximum nr of vertex attributes supported: {0}", nrAttributes);
   }
 
   void OpenGLContext::SwapBuffers()
