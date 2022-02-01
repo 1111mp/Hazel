@@ -10,9 +10,16 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/Hazel/src
 )
 
+function(my_add_executable)
+  foreach(_source IN ITEMS ${ARGN})
+    assign_source_group(${_source})
+  endforeach()
+  add_executable(${ARGV})
+endfunction(my_add_executable)
+
 # set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
-add_executable(${PROJECT_NAME}
+my_add_executable(${PROJECT_NAME}
   ${${PROJECT_NAME_U}_HEADER_FILES}
   ${${PROJECT_NAME_U}_SOURCE_FILES}
 )

@@ -24,10 +24,17 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+function(my_add_library)
+  foreach(_source IN ITEMS ${ARGN})
+    assign_source_group(${_source})
+  endforeach()
+  add_library(${ARGV})
+endfunction(my_add_library)
+
 # set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 # Add source to this project's executable.
-add_library(${PROJ_LIB_NAME} STATIC
+my_add_library(${PROJ_LIB_NAME} STATIC
   ${${PROJ_LIB_NAME}_HEADER_FILES}
   ${${PROJ_LIB_NAME}_SOURCE_FILES}
 )
