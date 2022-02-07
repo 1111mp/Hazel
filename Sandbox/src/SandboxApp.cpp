@@ -86,7 +86,7 @@ public:
 			}
 		)";
 		
-		m_Shader.reset(new Hazel::Shader(vertexSrc, fragmentSrc));
+		m_Shader.reset(Hazel::Shader::Create(vertexSrc, fragmentSrc));
 		
 		std::string blueShaderVertexSrc = R"(
 			#version 330 core
@@ -112,7 +112,7 @@ public:
 			}
 		 )";
 
-		m_SquareShader.reset(new Hazel::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
+		m_SquareShader.reset(Hazel::Shader::Create(blueShaderVertexSrc, blueShaderFragmentSrc));
   }
 
   void OnUpdate(Hazel::TimeStep ts) override

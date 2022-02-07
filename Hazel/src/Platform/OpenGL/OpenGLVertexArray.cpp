@@ -44,7 +44,7 @@ void OpenGLVertexArray::UnBind() const {
 
 void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer> &vertexBuffer)
 {
-	HZ_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size, "Vertex Buffer has no layout!");
+	HZ_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 	
 	glBindVertexArray(m_RendererID);
 	vertexBuffer->Bind();
