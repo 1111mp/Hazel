@@ -91,13 +91,13 @@ public:
 		
 		//m_Shader = Hazel::Shader::Create(vertexSrc, fragmentSrc);
 		
-		m_SquareShader = Hazel::Shader::Create(AssetsDir + "/assets/shaders/Texture.glsl");
+		auto textureShader = m_ShaderLibrary.Load(AssetsDir + "/assets/shaders/Texture.glsl");
 
 
 		m_Texture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/Checkerboard.png");
 		m_ChernoLogoTexture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/ChernoLogo.png");
 
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_SquareShader)->UploadUniformInt("u_Texture", 0);
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
   }
 
   void OnUpdate(Hazel::TimeStep ts) override
@@ -125,11 +125,13 @@ public:
 		
 		Hazel::Renderer::BeginScene(m_Camera);
 		
+		auto textureShader = m_ShaderLibrary.Get("Texture");
+
 		m_Texture->Bind();
-		Hazel::Renderer::Submit(m_SquareShader, m_SquareVA);
+		Hazel::Renderer::Submit(textureShader, m_SquareVA);
 
 		m_ChernoLogoTexture->Bind();
-		Hazel::Renderer::Submit(m_SquareShader, m_SquareVA);
+		Hazel::Renderer::Submit(textureShader, m_SquareVA);
 
 		//Hazel::Renderer::Submit(m_Shader, m_VertexArray);
 		
@@ -149,10 +151,10 @@ public:
   }
 	
 private:
+	Hazel::ShaderLibrary m_ShaderLibrary;
 	Hazel::Ref<Hazel::Shader> m_Shader;
 	Hazel::Ref<Hazel::VertexArray> m_VertexArray;
 	
-	Hazel::Ref<Hazel::Shader> m_SquareShader;
 	Hazel::Ref<Hazel::VertexArray> m_SquareVA;
 
 	Hazel::Ref<Hazel::Texture2D> m_Texture, m_ChernoLogoTexture;
