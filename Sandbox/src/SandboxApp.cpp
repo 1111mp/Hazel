@@ -10,29 +10,29 @@ public:
   ExampleLayer()
     : Layer("Ecample"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosiition(0.0f)
   {
-		float vertices[3 * 7] = {
-			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
-		};
+		//float vertices[3 * 7] = {
+		//	-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
+		//	 0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
+		//	 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
+		//};
 
-		Hazel::Ref<Hazel::VertexBuffer> vertexBuffer;
-		vertexBuffer =  Hazel::VertexBuffer::Create(vertices, sizeof(vertices));
+		//Hazel::Ref<Hazel::VertexBuffer> vertexBuffer;
+		//vertexBuffer =  Hazel::VertexBuffer::Create(vertices, sizeof(vertices));
 
-		Hazel::BufferLayout layout = {
-			{ Hazel::ShaderDataType::Float3, "a_Position" },
-			{ Hazel::ShaderDataType::Float4, "a_Color" }
-		};
-		vertexBuffer->SetLayout(layout);
-		
-		m_VertexArray = Hazel::VertexArray::Create();
-		m_VertexArray->AddVertexBuffer(vertexBuffer);
-		
+		//Hazel::BufferLayout layout = {
+		//	{ Hazel::ShaderDataType::Float3, "a_Position" },
+		//	{ Hazel::ShaderDataType::Float4, "a_Color" }
+		//};
+		//vertexBuffer->SetLayout(layout);
+		//
+		//m_VertexArray = Hazel::VertexArray::Create();
+		//m_VertexArray->AddVertexBuffer(vertexBuffer);
+		//
 
-		unsigned int indices[3] = { 0, 1, 2 };
-		Hazel::Ref<Hazel::IndexBuffer> indexBuffer;
-		indexBuffer = Hazel::IndexBuffer::Create(indices, 3);
-		m_VertexArray->SetIndexBuffer(indexBuffer);
+		//unsigned int indices[3] = { 0, 1, 2 };
+		//Hazel::Ref<Hazel::IndexBuffer> indexBuffer;
+		//indexBuffer = Hazel::IndexBuffer::Create(indices, 3);
+		//m_VertexArray->SetIndexBuffer(indexBuffer);
 		
 		float squareVertices[5 * 4] = {
 			-0.75f, -0.75f, 0.0f, 0.0f, 0.0f,
@@ -56,74 +56,42 @@ public:
 		square_IB= Hazel::IndexBuffer::Create(squareIndices, 6);
 		m_SquareVA->SetIndexBuffer(square_IB);
 
-		std::string vertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
-	
-			uniform mat4 u_ViewProjection;
+	//	std::string vertexSrc = R"(
+	//		#version 330 core
+	//		
+	//		layout(location = 0) in vec3 a_Position;
+	//		layout(location = 1) in vec4 a_Color;
+	//
+	//		uniform mat4 u_ViewProjection;
 
-			out vec3 v_Position;
-			out vec4 v_Color;
+	//		out vec3 v_Position;
+	//		out vec4 v_Color;
 
-			void main()
-			{
-				v_Position = a_Position;
-				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-			}
-		)";
+	//		void main()
+	//		{
+	//			v_Position = a_Position;
+	//			v_Color = a_Color;
+	//			gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+	//		}
+	//	)";
 
-		std::string fragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
+	//	std::string fragmentSrc = R"(
+	//		#version 330 core
+	//		
+	//		layout(location = 0) out vec4 color;
 
-			in vec3 v_Position;
-			in vec4 v_Color;
+	//		in vec3 v_Position;
+	//		in vec4 v_Color;
 
-			void main()
-			{
-				color = v_Color;
-			}
-		)";
+	//		void main()
+	//		{
+	//			color = v_Color;
+	//		}
+	//	)";
 		
-		m_Shader = Hazel::Shader::Create(vertexSrc, fragmentSrc);
+		//m_Shader = Hazel::Shader::Create(vertexSrc, fragmentSrc);
 		
-		std::string blueShaderVertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec2 a_TexCoord;
-	 
-			uniform mat4 u_ViewProjection;
-
-			out vec2 v_TexCoord;
-	 
-			void main()
-			{
-				v_TexCoord = a_TexCoord;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-			}
-		 )";
-		
-		std::string blueShaderFragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			in vec2 v_TexCoord;
-			
-			uniform sampler2D u_Texture;
-			
-			void main()
-			{
-			 color = texture(u_Texture, v_TexCoord);
-			}
-		 )";
-
-		m_SquareShader = Hazel::Shader::Create(blueShaderVertexSrc, blueShaderFragmentSrc);
+		m_SquareShader = Hazel::Shader::Create(AssetsDir + "/assets/shaders/Texture.glsl");
 
 
 		m_Texture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/Checkerboard.png");
