@@ -33,4 +33,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   glfw
   Glad
   imgui
+  stb_image
 )

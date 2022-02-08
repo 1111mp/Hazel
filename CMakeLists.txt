@@ -10,6 +10,11 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
+configure_file (
+  "${PROJECT_SOURCE_DIR}/HazelConfig.h.in"
+  "${PROJECT_SOURCE_DIR}/Hazel/src/HazelConfig.h"
+)
+
 # Determine the platform.
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
   message("It's OS_MACOSX!")
@@ -76,6 +81,7 @@ include_directories(
   Thirdparty/spdlog/include
   Thirdparty/imgui
   Thirdparty/glm
+  Thirdparty/stb_image
 )
 
 # Include sub-projects.

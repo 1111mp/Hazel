@@ -23,3 +23,8 @@ add_library(imgui
   imgui/imstb_truetype.h
   imgui/imgui_demo.cpp
 )
+
+add_library(stb_image
+  stb_image/stb_image.h
+  stb_image/stb_image.cpp
+)
