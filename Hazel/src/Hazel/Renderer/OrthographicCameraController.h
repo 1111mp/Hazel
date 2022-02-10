@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Renderer/OrthographicCamera.h"
-#include "Core/TimeStep.h"
+#include "OrthographicCamera.h"
+#include "Hazel/Core/TimeStep.h"
 
-#include "Events/ApplicationEvent.h"
-#include "Events/MouseEvent.h"
+#include "Hazel/Events/ApplicationEvent.h"
+#include "Hazel/Events/MouseEvent.h"
 
 namespace Hazel {
 

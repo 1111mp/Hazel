@@ -16,7 +16,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Hazel/Log.h"
+#include "Hazel/Core/Log.h"
 
 #ifdef __APPLE__
 	#define GL_SILENCE_DEPRECATION

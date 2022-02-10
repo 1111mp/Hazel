@@ -2,7 +2,7 @@
 
 #include "Window.h"
 #include "LayerStack.h"
-#include "Core/TimeStep.h"
+#include "TimeStep.h"
 
 #include "Hazel/ImGui/ImGuiLayer.h"
 
