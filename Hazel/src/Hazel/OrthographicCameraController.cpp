@@ -6,7 +6,8 @@
 namespace Hazel {
 
   OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool rotation)
-    : m_AspectRatio(aspectRatio), m_Camera(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel), m_Rotation(rotation)
+    : m_AspectRatio(aspectRatio), m_LastAspectRatio(aspectRatio), 
+    m_Camera(-m_AspectRatio * m_ZoomLevel, m_AspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel), m_Rotation(rotation)
   {
   }
 
@@ -54,7 +55,14 @@ namespace Hazel {
 
   bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
   {
-    m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
+    if (e.GetWidth() == 0 || e.GetHeight() == 0)
+    {
+      m_AspectRatio = m_LastAspectRatio;
+    }
+    else
+    {
+      m_AspectRatio = m_LastAspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
+    }
     m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
     return false;
   }
