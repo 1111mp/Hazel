@@ -28,15 +28,9 @@ namespace Hazel {
 		EventCategoryMouseButton = BIT(4)
 	};
 
-#ifdef __APPLE__
-	#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
+#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
 																virtual EventType GetEventType() const override { return GetStaticType(); }\
 																virtual const char* GetName() const override { return #type; }
-#else
-	#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; }\
-																virtual EventType GetEventType() const override { return GetStaticType(); }\
-																virtual const char* GetName() const override { return #type; }
-#endif
 
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
