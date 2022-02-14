@@ -6,7 +6,7 @@
 
 namespace Hazel {
 
-  class HazelExports Layer
+  class Layer
   {
   public:
     Layer(const std::string& name = "Layer");

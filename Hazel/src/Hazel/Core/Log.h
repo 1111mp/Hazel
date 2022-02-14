@@ -6,7 +6,7 @@
 
 namespace Hazel {
 
-  class HazelExports Log 
+  class Log 
   {
   public:
     static void Init();

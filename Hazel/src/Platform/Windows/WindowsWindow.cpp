@@ -169,9 +169,10 @@ namespace Hazel {
   void WindowsWindow::Shutdown()
   {
     glfwDestroyWindow(m_Window);
-    if (--s_GLFWWindowCount = 0)
+    --s_GLFWWindowCount;
+
+    if (s_GLFWWindowCount == 0)
     {
-      HZ_HAZEL_INFO("Terminating GLFW");
       glfwTerminate();
     }
   }

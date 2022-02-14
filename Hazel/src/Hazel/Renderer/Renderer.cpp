@@ -1,6 +1,5 @@
 #include "Renderer.h"
 
-#include "Platform/OpenGL/OpenGLShader.h"
 #include "Renderer2D.h"
 
 namespace Hazel {
@@ -12,6 +11,11 @@ namespace Hazel {
 		RenderCommand::Init();
 		Renderer2D::Init();
 	}
+
+	void Renderer::Shutdown()
+	{
+		Renderer2D::Shutdown();
+  }
 
 	void Renderer::BeginScene(OrthographicCamera& camera)
 	{
@@ -26,9 +30,9 @@ namespace Hazel {
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray)
 	{
 		shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+		shader->SetMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
 		
-		vertexArray->Bind();
+    vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
 	}
 

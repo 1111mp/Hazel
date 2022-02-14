@@ -27,6 +27,7 @@ mono_crash.*
 
 # Build results
 [Dd]ebug/
+!/Hazel/src/Hazel/Debug
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/

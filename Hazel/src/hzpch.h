@@ -18,6 +18,8 @@
 
 #include "Hazel/Core/Log.h"
 
+#include "Hazel/Debug/Instrumentor.h"
+
 #ifdef __APPLE__
 	#define GL_SILENCE_DEPRECATION
 #endif

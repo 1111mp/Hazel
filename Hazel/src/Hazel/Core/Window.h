@@ -21,7 +21,7 @@ namespace Hazel
   };
 
   // Interface representing a desktop system based Window
-  class HazelExports Window
+  class Window
   {
   public:
     using EventCallbackFn = std::function<void(Event &)>;

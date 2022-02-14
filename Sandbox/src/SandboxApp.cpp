@@ -100,7 +100,7 @@ public:
     m_Texture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/Checkerboard.png");
     m_ChernoLogoTexture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/ChernoLogo.png");
 
-    std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
+    textureShader->SetInt("u_Texture", 0);
   }
 
   void OnUpdate(Hazel::TimeStep ts) override

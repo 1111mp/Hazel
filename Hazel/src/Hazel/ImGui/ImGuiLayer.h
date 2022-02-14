@@ -9,7 +9,7 @@
 namespace Hazel {
   #define GLFW_HAS_GET_KEY_NAME (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100 >= 3200) // 3.2+ glfwGetKeyName()
 
-  class HazelExports ImGuiLayer : public Layer
+  class ImGuiLayer : public Layer
   {
   public:
     ImGuiLayer();
