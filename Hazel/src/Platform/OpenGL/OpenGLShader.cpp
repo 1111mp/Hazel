@@ -118,10 +118,13 @@ namespace Hazel {
 
   std::string OpenGLShader::ReadFile(const std::string& filepath)
   {
+    HZ_PROFILE_FUNCTION();
+
     std::string result;
     std::ifstream in(filepath, std::ios::in | std::ios::binary);
     if (in)
     {
+      in.seekg(0, std::ios::end);
       size_t size = in.tellg();
       if (size != -1)
       {
