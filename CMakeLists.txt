@@ -27,6 +27,7 @@ elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
 elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
   message("It's OS_WINDOWS!")
   set(OS_WINDOWS 1)
+  add_compile_definitions(HZ_PLATFORM_WINDOWS)
 endif()
 
 
