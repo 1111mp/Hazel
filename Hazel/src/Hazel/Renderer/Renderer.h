@@ -18,7 +18,7 @@ namespace Hazel {
 		
 		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray);
 		
-		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
+		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 		
 	private:
 		struct SceneData {

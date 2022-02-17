@@ -11,8 +11,8 @@ namespace Hazel {
   public:
     static void Init();
 
-    inline static Ref<spdlog::logger>& GetHazelLogger() { return s_HazelLogger; }
-    inline static Ref<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+    static Ref<spdlog::logger>& GetHazelLogger() { return s_HazelLogger; }
+    static Ref<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
   
   private:
     static Ref<spdlog::logger> s_HazelLogger;
