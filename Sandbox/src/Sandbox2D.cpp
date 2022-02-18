@@ -31,6 +31,7 @@ void Sandbox2D::OnUpdate(Hazel::TimeStep ts)
   m_CameraController.OnUpdate(ts);
 
   // Render
+  Hazel::Renderer2D::ResetStats();
   {
     HZ_PROFILE_SCOPE("Renderer Prep");
     Hazel::RenderCommand::SetColorClear({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -56,8 +57,15 @@ void Sandbox2D::OnImGuiRender()
 {
   HZ_PROFILE_FUNCTION();
   ImGui::Begin("Settings");
-  ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
 
+  auto stats = Hazel::Renderer2D::GetStats();
+  ImGui::Text("Renderer2D Stats:");
+  ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+  ImGui::Text("Quads: %d", stats.QuadCount);
+  ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+  ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+
+  ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
   ImGui::End();
 }
 

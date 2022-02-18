@@ -58,9 +58,9 @@ namespace Hazel {
     for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
     {
       // *it 就是迭代器it指向的元素 这里做 --it 运算 进入下一个迭代
-      (*it)->OnEvent(e);
       if (e.Handled)
         break;
+      (*it)->OnEvent(e);
     }
   }
 
