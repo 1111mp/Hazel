@@ -4,6 +4,7 @@
 #include "Sandbox2D.h"
 #include "ExampleLayer.h"
 #include "Game/GameLayer.h"
+#include "ParticleDemo.h"
 
 #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" ) // 设置入口地址
 
@@ -13,8 +14,8 @@ public:
   Sandbox()
   {
     //PushLayer(new ExampleLayer());
-    //PushLayer(new Sandbox2D());
-    PushLayer(new GameLayer());
+    PushLayer(new Sandbox2D());
+    //PushLayer(new GameLayer());
   }
 
   ~Sandbox()
