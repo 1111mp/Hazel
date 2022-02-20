@@ -14,6 +14,11 @@ void Sandbox2D::OnAttach()
   HZ_PROFILE_FUNCTION();
 
   m_CheckerboardTexture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/Checkerboard.png");
+
+  Hazel::FramebufferSpecification fbSpec;
+  fbSpec.Width = 1280;
+  fbSpec.Height = 720;
+  m_Framebuffer = Hazel::Framebuffer::Create(fbSpec);
 }
 
 void Sandbox2D::OnDetach()
@@ -32,6 +37,7 @@ void Sandbox2D::OnUpdate(Hazel::TimeStep ts)
   Hazel::Renderer2D::ResetStats();
   {
     HZ_PROFILE_SCOPE("Renderer Prep");
+    m_Framebuffer->Bind();
     Hazel::RenderCommand::SetColorClear({ 0.1f, 0.1f, 0.1f, 1.0f });
     Hazel::RenderCommand::Clear();
   }
@@ -49,6 +55,8 @@ void Sandbox2D::OnUpdate(Hazel::TimeStep ts)
     Hazel::Renderer2D::DrawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, glm::radians(rotation), m_CheckerboardTexture, 20.0f);
     Hazel::Renderer2D::EndScene();
   }
+
+  m_Framebuffer->UnBind();
 }
 
 void Sandbox2D::OnImGuiRender()
@@ -56,7 +64,7 @@ void Sandbox2D::OnImGuiRender()
   HZ_PROFILE_FUNCTION();
 
   // Note: Switch this to true to enable dockspace
-  static bool dockingEnabled = false;
+  static bool dockingEnabled = true;
   if (dockingEnabled)
   {
     static bool dockspaceOpen = true;
@@ -112,7 +120,7 @@ void Sandbox2D::OnImGuiRender()
 
     if (ImGui::BeginMenuBar())
     {
-      if (ImGui::BeginMenu("Options"))
+      if (ImGui::BeginMenu("File"))
       {
         // Disabling fullscreen would allow the window to be moved to the front of other windows,
         // which we can't undo at the moment without finer window depth/z control.
@@ -125,7 +133,18 @@ void Sandbox2D::OnImGuiRender()
     }
 
     ImGui::Begin("Settings");
+
+    auto stats = Hazel::Renderer2D::GetStats();
+    ImGui::Text("Renderer2D Stats:");
+    ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+    ImGui::Text("Quads: %d", stats.QuadCount);
+    ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+    ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+
     ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+
+    uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+    ImGui::Image((void*)textureID, { 1280, 720 });
     ImGui::End();
 
     ImGui::End();
@@ -133,6 +152,14 @@ void Sandbox2D::OnImGuiRender()
   else
   {
     ImGui::Begin("Settings");
+
+    auto stats = Hazel::Renderer2D::GetStats();
+    ImGui::Text("Renderer2D Stats:");
+    ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+    ImGui::Text("Quads: %d", stats.QuadCount);
+    ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+    ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+
     ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
     ImGui::End();
   }

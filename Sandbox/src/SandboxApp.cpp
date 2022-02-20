@@ -6,7 +6,7 @@
 #include "Game/GameLayer.h"
 #include "ParticleDemo.h"
 
-#pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" ) // 设置入口地址
+// #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" ) // 设置入口地址
 
 class Sandbox :public Hazel::Application
 {
