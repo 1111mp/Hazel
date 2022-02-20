@@ -8,6 +8,7 @@ source_group("Source Files" FILES ${${PROJECT_NAME_U}_SOURCE_FILES})
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/Hazel/src
+  src
 )
 
 function(my_add_executable)

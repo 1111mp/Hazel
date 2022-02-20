@@ -31,6 +31,22 @@ void ParticleSystem::OnUpdate(Hazel::TimeStep ts)
 	}
 }
 
+void ParticleSystem::OnRender()
+{
+	for (auto& particle : m_ParticlePool)
+	{
+		if (!particle.Active)
+			continue;
+
+		float life = particle.LifeRemaining / particle.LifeTime;
+		glm::vec4 color = glm::lerp(particle.ColorEnd, particle.ColorBegin, life);
+		//color.a = color.a * life;
+
+		float size = glm::lerp(particle.SizeEnd, particle.SizeBegin, life);
+		Hazel::Renderer2D::DrawRotatedQuad(particle.Position, { size, size }, particle.Rotation, color);
+	}
+}
+
 void ParticleSystem::OnRender(Hazel::OrthographicCamera& camera)
 {
   Hazel::Renderer2D::BeginScene(camera);
