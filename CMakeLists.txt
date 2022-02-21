@@ -88,4 +88,5 @@ include_directories(
 # Include sub-projects.
 add_subdirectory(Thirdparty)
 add_subdirectory(Hazel)
+add_subdirectory(Hazelnut)
 add_subdirectory(Sandbox)
