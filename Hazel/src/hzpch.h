@@ -20,6 +20,10 @@
 
 #include "Hazel/Debug/Instrumentor.h"
 
+#ifdef HZ_PLATFORM_WINDOWS
+	#include <Windows.h>
+#endif
+
 #ifdef __APPLE__
 	#define GL_SILENCE_DEPRECATION
 #endif

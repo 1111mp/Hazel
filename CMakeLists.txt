@@ -25,9 +25,15 @@ elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
   set(OS_LINUX 1)
   set(OS_POSIX 1)
 elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
-  message("It's OS_WINDOWS!")
   set(OS_WINDOWS 1)
-  add_compile_definitions(HZ_PLATFORM_WINDOWS)
+  if(CMAKE_CL_64)
+    message("It's OS_WINDOWS_x64!")
+    set(platform x64)
+    add_compile_definitions(HZ_PLATFORM_WINDOWS)
+  else(CMAKE_CL_64)
+    message("It's OS_WINDOWS_x86!")
+    set(platform x86)
+  endif(CMAKE_CL_64)
 endif()
 
 
@@ -78,15 +84,16 @@ function(assign_source_group)
 endfunction(assign_source_group)
 
 include_directories(
-  Thirdparty/Glad/include
-  Thirdparty/spdlog/include
-  Thirdparty/imgui
-  Thirdparty/glm
-  Thirdparty/stb_image
+  "Thirdparty/Glad/include"
+  "Thirdparty/spdlog/include"
+  "Thirdparty/imgui"
+  "Thirdparty/glm"
+  "Thirdparty/stb_image"
+  "Thirdparty/entt/include"
 )
 
 # Include sub-projects.
-add_subdirectory(Thirdparty)
-add_subdirectory(Hazel)
-add_subdirectory(Hazelnut)
-add_subdirectory(Sandbox)
+add_subdirectory("Thirdparty")
+add_subdirectory("Hazel")
+add_subdirectory("Hazelnut")
+add_subdirectory("Sandbox")

@@ -22,6 +22,15 @@ namespace Hazel {
     fbSpec.Width = 1280;
     fbSpec.Height = 720;
     m_Framebuffer = Framebuffer::Create(fbSpec);
+
+    m_ActiveScene = CreateRef<Scene>();
+
+    auto square = m_ActiveScene->CreateEntity();
+
+    m_ActiveScene->Reg().emplace<TransformComponent>(square);
+    m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4({ 0.0f, 1.0f, 0.0f, 1.0f }));
+
+    m_SquareEntity = square;
   }
 
   void EditorLayer::OnDetach()
@@ -39,24 +48,21 @@ namespace Hazel {
 
     // Render
     Renderer2D::ResetStats();
+
+    m_Framebuffer->Bind();
+
     {
       HZ_PROFILE_SCOPE("Renderer Prep");
-      m_Framebuffer->Bind();
       RenderCommand::SetColorClear({ 0.1f, 0.1f, 0.1f, 1.0f });
       RenderCommand::Clear();
     }
 
     {
-      static float rotation = 0.0f;
-      rotation += ts * 50.0f;
-
       HZ_PROFILE_SCOPE("Renderer Draw");
       Renderer2D::BeginScene(m_CameraController.GetCamera());
-      Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(-45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
-      Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-      Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-      Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, 10.0f);
-      Renderer2D::DrawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, glm::radians(rotation), m_CheckerboardTexture, 20.0f);
+
+      m_ActiveScene->OnUpdate(ts);
+      
       Renderer2D::EndScene();
     }
 
@@ -139,7 +145,9 @@ namespace Hazel {
     ImGui::Text("Quads: %d", stats.QuadCount);
     ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
     ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-    ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+
+    auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
+    ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
     ImGui::End();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2({ 0, 0 }));
