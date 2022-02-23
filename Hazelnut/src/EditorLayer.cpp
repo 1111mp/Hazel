@@ -27,8 +27,10 @@ namespace Hazel {
 
     auto square = m_ActiveScene->CreateEntity("Green Square");
     square.AddComponent<SpriteRendererComponent>(glm::vec4({ 0.0f, 1.0f, 0.0f, 1.0f }));
-
     m_SquareEntity = square;
+
+    m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+    m_CameraEntity.AddComponent<CameraComponent>();
   }
 
   void EditorLayer::OnDetach()
@@ -46,6 +48,8 @@ namespace Hazel {
     {
       m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
       m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+
+      m_ActiveScene->OnViewportResize(m_ViewportSize.x, m_ViewportSize.y);
     }
 
     // Update
@@ -57,20 +61,10 @@ namespace Hazel {
 
     m_Framebuffer->Bind();
 
-    {
-      HZ_PROFILE_SCOPE("Renderer Prep");
-      RenderCommand::SetColorClear({ 0.1f, 0.1f, 0.1f, 1.0f });
-      RenderCommand::Clear();
-    }
+    RenderCommand::SetColorClear({ 0.1f, 0.1f, 0.1f, 1.0f });
+    RenderCommand::Clear();
 
-    {
-      HZ_PROFILE_SCOPE("Renderer Draw");
-      Renderer2D::BeginScene(m_CameraController.GetCamera());
-
-      m_ActiveScene->OnUpdate(ts);
-      
-      Renderer2D::EndScene();
-    }
+    m_ActiveScene->OnUpdate(ts);
 
     m_Framebuffer->UnBind();
   }
