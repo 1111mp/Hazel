@@ -64,17 +64,17 @@ void ParticleDemo::OnUpdate(Hazel::TimeStep ts)
     Hazel::RenderCommand::Clear();
   }
 
-  if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_LEFT))
+  if (Hazel::Input::IsMouseButtonPressed(Hazel::Mouse::ButtonLeft))
   {
-    auto [x, y] = Hazel::Input::GetMousePosition();
+    auto mousePosition = Hazel::Input::GetMousePosition();
     auto width = Hazel::Application::Get().GetWindow().GetWidth();
     auto height = Hazel::Application::Get().GetWindow().GetHeight();
 
     auto bounds = m_CameraController.GetBounds();
     auto pos = m_CameraController.GetCamera().GetPosition();
-    x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
-    y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
-    m_Particle.Position = { x + pos.x, y + pos.y };
+    mousePosition.x = (mousePosition.x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+    mousePosition.y = bounds.GetHeight() * 0.5f - (mousePosition.y / height) * bounds.GetHeight();
+    m_Particle.Position = { mousePosition.x + pos.x, mousePosition.y + pos.y };
     for (int i = 0; i < 5; i++)
       m_ParticleSystem.Emit(m_Particle);
   }
