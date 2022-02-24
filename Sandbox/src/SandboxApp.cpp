@@ -12,6 +12,7 @@ class Sandbox :public Hazel::Application
 {
 public:
   Sandbox()
+    : Application("Sandbox", "/Sandbox/imgui.ini")
   {
     //PushLayer(new ExampleLayer());
     PushLayer(new Sandbox2D());

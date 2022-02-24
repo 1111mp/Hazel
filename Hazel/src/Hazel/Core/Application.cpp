@@ -8,7 +8,7 @@ namespace Hazel {
 
   Application* Application::s_Instance = nullptr;
 
-  Application::Application(const std::string& name)
+  Application::Application(const std::string& name, const std::string& ini)
   {
     HZ_PROFILE_FUNCTION();
 
@@ -20,7 +20,7 @@ namespace Hazel {
 
     Renderer::Init();
 
-    m_ImGuiLayer = new ImGuiLayer();
+    m_ImGuiLayer = new ImGuiLayer(ini);
     PushOverlay(m_ImGuiLayer);
   }
 

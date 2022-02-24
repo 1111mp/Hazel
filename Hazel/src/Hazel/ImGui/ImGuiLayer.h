@@ -13,6 +13,7 @@ namespace Hazel {
   {
   public:
     ImGuiLayer();
+    ImGuiLayer(const std::string& ini);
     ~ImGuiLayer();
 
     virtual void OnAttach() override;
@@ -25,6 +26,7 @@ namespace Hazel {
 		inline void BlockEvents(bool block) { m_BlockEvents = block; }
 		
   private:
+    std::string m_IniPath = "imgui.ini";
 		bool m_BlockEvents = true;
     float m_Time = 0.0f;
   };

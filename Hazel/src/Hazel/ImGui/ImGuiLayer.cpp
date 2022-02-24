@@ -16,6 +16,11 @@ namespace Hazel {
   {
   }
 
+  ImGuiLayer::ImGuiLayer(const std::string& ini)
+    : Layer("ImGuiLayer"), m_IniPath(ProjectSourceDir + ini)
+  {
+  }
+
   ImGuiLayer::~ImGuiLayer()
   {
   }
@@ -31,6 +36,9 @@ namespace Hazel {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    io.IniFilename = nullptr;
+
+    ImGui::LoadIniSettingsFromDisk(m_IniPath.c_str());
 
     ImGui::StyleColorsDark();
 
@@ -71,6 +79,7 @@ namespace Hazel {
   void ImGuiLayer::Begin()
   {
     HZ_PROFILE_FUNCTION();
+    ImGui::SaveIniSettingsToDisk(m_IniPath.c_str());
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();

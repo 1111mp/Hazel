@@ -14,7 +14,7 @@ namespace Hazel
   class HazelExports Application
   {
   public:
-    Application(const std::string& name = "Hazel App");
+    Application(const std::string& name = "Hazel App", const std::string& ini = "imgui.ini");
     virtual ~Application();
 		
 		void OnEvent(Event& e);

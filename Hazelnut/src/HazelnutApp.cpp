@@ -11,7 +11,7 @@ namespace Hazel {
   {
   public:
     Hazelnut()
-      : Application("Hazel Editor")
+      : Application("Hazel Editor", "/Hazelnut/imgui.ini")
     {
       PushLayer(new EditorLayer());
     }
