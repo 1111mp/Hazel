@@ -64,7 +64,7 @@ static bool PointInTri(const glm::vec2& p, glm::vec2& p0, const glm::vec2& p1, c
 
 void Level::Init()
 {
-  m_TriangleTexture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/Triangle.png");
+  m_TriangleTexture = Hazel::Texture2D::Create(AssetsDir + "/textures/Triangle.png");
   m_Player.LoadAssets();
 
   m_Pillars.resize(5);

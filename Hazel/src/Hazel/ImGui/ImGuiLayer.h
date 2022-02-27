@@ -25,6 +25,7 @@ namespace Hazel {
 		
 		inline void BlockEvents(bool block) { m_BlockEvents = block; }
 		
+    void SetDarkThemeColors();
   private:
     std::string m_IniPath = "imgui.ini";
 		bool m_BlockEvents = true;

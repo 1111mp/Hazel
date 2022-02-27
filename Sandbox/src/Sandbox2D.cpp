@@ -13,7 +13,7 @@ void Sandbox2D::OnAttach()
 {
   HZ_PROFILE_FUNCTION();
 
-  m_CheckerboardTexture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/Checkerboard.png");
+  m_CheckerboardTexture = Hazel::Texture2D::Create(AssetsDir + "/textures/Checkerboard.png");
 }
 
 void Sandbox2D::OnDetach()

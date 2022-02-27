@@ -25,11 +25,11 @@ ExampleLayer::ExampleLayer()
   square_IB = Hazel::IndexBuffer::Create(squareIndices, 6);
   m_SquareVA->SetIndexBuffer(square_IB);
 
-  auto textureShader = m_ShaderLibrary.Load(AssetsDir + "/assets/shaders/Texture.glsl");
+  auto textureShader = m_ShaderLibrary.Load(AssetsDir + "/shaders/Texture.glsl");
 
 
-  m_Texture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/Checkerboard.png");
-  m_ChernoLogoTexture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/ChernoLogo.png");
+  m_Texture = Hazel::Texture2D::Create(AssetsDir + "/textures/Checkerboard.png");
+  m_ChernoLogoTexture = Hazel::Texture2D::Create(AssetsDir + "/textures/ChernoLogo.png");
 
   textureShader->SetInt("u_Texture", 0);
 }

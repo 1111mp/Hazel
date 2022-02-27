@@ -16,7 +16,7 @@ namespace Hazel {
   {
     HZ_PROFILE_FUNCTION();
 
-    m_CheckerboardTexture = Texture2D::Create(AssetsDir + "/assets/textures/Checkerboard.png");
+    m_CheckerboardTexture = Texture2D::Create(AssetsDir + "/textures/Checkerboard.png");
 
     FramebufferSpecification fbSpec;
     fbSpec.Width = 1280;
@@ -151,11 +151,16 @@ namespace Hazel {
 
     // Submit the DockSpace
     ImGuiIO& io = ImGui::GetIO();
+    ImGuiStyle& style = ImGui::GetStyle();
+    float minWinSizeX = style.WindowMinSize.x;
+    style.WindowMinSize.x = 370.0f;
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
       ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
       ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
+
+    style.WindowMinSize.x = minWinSizeX;
 
     if (ImGui::BeginMenuBar())
     {

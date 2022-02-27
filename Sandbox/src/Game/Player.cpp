@@ -24,7 +24,7 @@ Player::Player()
 
 void Player::LoadAssets()
 {
-	m_ShipTexture = Hazel::Texture2D::Create(AssetsDir + "/assets/textures/Ship.png");
+	m_ShipTexture = Hazel::Texture2D::Create(AssetsDir + "/textures/Ship.png");
 }
 
 void Player::OnUpdate(Hazel::TimeStep ts)

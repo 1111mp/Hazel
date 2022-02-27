@@ -28,7 +28,7 @@ ParticleDemo::ParticleDemo()
 
 void ParticleDemo::OnAttach()
 {
-  m_SpriteSheet = Hazel::Texture2D::Create(AssetsDir + "/assets/game/textures/RPGpack_sheet_2X.png");
+  m_SpriteSheet = Hazel::Texture2D::Create(AssetsDir + "/game/textures/RPGpack_sheet_2X.png");
 
   m_MapWidth = s_MapWidth;
   m_MapHeight = strlen(s_MapTiles) / s_MapWidth;

@@ -14,7 +14,7 @@ void GameLayer::OnAttach()
   m_Level.Init();
 
   ImGuiIO io = ImGui::GetIO();
-  m_Font = io.Fonts->AddFontFromFileTTF((AssetsDir + "/assets/OpenSans-Regular.ttf").c_str(), 120.0f);
+  m_Font = io.Fonts->AddFontFromFileTTF((AssetsDir + "/fonts/opensans/OpenSans-Regular.ttf").c_str(), 120.0f);
 }
 
 void GameLayer::OnDetach()
