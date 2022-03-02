@@ -10,6 +10,13 @@ set(GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only" )
 
 add_subdirectory(GLFW)
 
+set(YAML_CPP_BUILD_TESTS OFF CACHE BOOL "disable yaml tests")
+set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "disable yaml tools")
+set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "disable yaml contrib")
+set(YAML_CPP_INSTALL OFF CACHE BOOL "disable yaml install")
+
+add_subdirectory(yaml-cpp)
+
 add_library(imgui
   imgui/imconfig.h
   imgui/imgui.h

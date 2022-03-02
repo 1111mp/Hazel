@@ -90,6 +90,7 @@ include_directories(
   "Thirdparty/glm"
   "Thirdparty/stb_image"
   "Thirdparty/entt/include"
+  "Thirdparty/yaml-cpp/include"
 )
 
 # Include sub-projects.

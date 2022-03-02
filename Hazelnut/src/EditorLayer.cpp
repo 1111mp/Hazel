@@ -25,43 +25,45 @@ namespace Hazel {
 
     m_ActiveScene = CreateRef<Scene>();
 
-    auto square = m_ActiveScene->CreateEntity("Green Square");
-    square.AddComponent<SpriteRendererComponent>(glm::vec4({ 0.0f, 1.0f, 0.0f, 1.0f }));
-    m_SquareEntity = square;
+    #if 0
+      auto square = m_ActiveScene->CreateEntity("Green Square");
+      square.AddComponent<SpriteRendererComponent>(glm::vec4({ 0.0f, 1.0f, 0.0f, 1.0f }));
+      m_SquareEntity = square;
 
-    m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
-    m_CameraEntity.AddComponent<CameraComponent>();
+      m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+      m_CameraEntity.AddComponent<CameraComponent>();
 
-    class CameraController : public ScriptableEntity
-    {
-    public:
-      void OnCreate() override
+      class CameraController : public ScriptableEntity
       {
+      public:
+        void OnCreate() override
+        {
 
-      }
+        }
 
-      void OnDestory() override
-      {
+        void OnDestory() override
+        {
 
-      }
+        }
 
-      void OnUpdate(TimeStep ts) override
-      {
-        auto& transform = GetComponent<TransformComponent>().Translation;
-        float speed = 5.0f;
+        void OnUpdate(TimeStep ts) override
+        {
+          auto& transform = GetComponent<TransformComponent>().Translation;
+          float speed = 5.0f;
 
-        if (Input::IsKeyPressed(Key::A))
-          transform.x -= speed * ts;
-        if (Input::IsKeyPressed(Key::D))
-          transform.x += speed * ts;
-        if (Input::IsKeyPressed(Key::W))
-          transform.y += speed * ts;
-        if (Input::IsKeyPressed(Key::S))
-          transform.y -= speed * ts;
-      }
-    };
+          if (Input::IsKeyPressed(Key::A))
+            transform.x -= speed * ts;
+          if (Input::IsKeyPressed(Key::D))
+            transform.x += speed * ts;
+          if (Input::IsKeyPressed(Key::W))
+            transform.y += speed * ts;
+          if (Input::IsKeyPressed(Key::S))
+            transform.y -= speed * ts;
+        }
+      };
 
-    m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+      m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+    #endif // 0
 
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
   }
@@ -168,6 +170,18 @@ namespace Hazel {
       {
         // Disabling fullscreen would allow the window to be moved to the front of other windows,
         // which we can't undo at the moment without finer window depth/z control.
+        if (ImGui::MenuItem("Serialize"))
+        {
+          Hazel::SceneSerializer serializer(m_ActiveScene);
+          serializer.Serialize(AssetsDir + "/scene/example.yaml");
+        }
+
+        if (ImGui::MenuItem("Deserialize"))
+        {
+          Hazel::SceneSerializer serializer(m_ActiveScene);
+          serializer.Deserialize(AssetsDir + "/scene/example.yaml");
+        }
+
         if (ImGui::MenuItem("Exit")) Application::Get().Close();
 
         ImGui::EndMenu();

@@ -37,4 +37,5 @@ target_link_libraries(Hazelnut PRIVATE
   Glad
   imgui
   stb_image
+  yaml-cpp
 )
