@@ -79,7 +79,7 @@ namespace Hazel {
       ++s_GLFWWindowCount;
     }
 
-    m_Context = CreateScope<OpenGLContext>(m_Window);
+    m_Context = GraphicsContext::Create(m_Window);
     m_Context->Init();
 
     glfwSetWindowUserPointer(m_Window, &m_Data);
@@ -175,6 +175,8 @@ namespace Hazel {
   void WindowsWindow::Shutdown()
   {
     HZ_PROFILE_FUNCTION();
+
+    m_Context->Destory();
 
     glfwDestroyWindow(m_Window);
     --s_GLFWWindowCount;

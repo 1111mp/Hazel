@@ -8,11 +8,6 @@ file(GLOB_RECURSE ${PROJ_NAME}_SOURCE_FILES src/*.cpp)
 source_group("Header Files" FILES ${${PROJ_NAME}_HEADER_FILES})
 source_group("Source Files" FILES ${${PROJ_NAME}_SOURCE_FILES})
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/Hazel/src
-  src
-)
-
 function(my_add_executable)
   foreach(_source IN ITEMS ${ARGN})
     assign_source_group(${_source})
@@ -27,12 +22,14 @@ my_add_executable(Hazelnut
   ${${PROJ_NAME}_SOURCE_FILES}
 )
 
-find_package(OpenGL REQUIRED)
+target_include_directories(Hazelnut PRIVATE
+  ${CMAKE_SOURCE_DIR}/Hazel/src
+  src
+)
 
 target_link_libraries(Hazelnut PRIVATE
   hazel_lib
   spdlog::spdlog
-  ${OPENGL_LIBRARIES}
   glfw
   Glad
   imgui

@@ -20,10 +20,6 @@ file(GLOB_RECURSE ${PROJ_LIB_NAME}_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/
 source_group("Header Files" FILES ${${PROJ_LIB_NAME}_HEADER_FILES})
 source_group("Source Files" FILES ${${PROJ_LIB_NAME}_SOURCE_FILES})
 
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/src
-)
-
 function(my_add_library)
   foreach(_source IN ITEMS ${ARGN})
     assign_source_group(${_source})
@@ -51,7 +47,16 @@ target_precompile_headers(${PROJ_LIB_NAME} PUBLIC
 #   EXPORT_MACRO_NAME ${PROJECT_NAME}Exports
 #   EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/src/Hazel/${PROJECT_NAME}Exports.h
 # )
+find_package(OpenGL REQUIRED)
+find_package(Vulkan REQUIRED)
+
+target_include_directories(${PROJ_LIB_NAME} PRIVATE
+  ${Vulkan_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 
 target_link_libraries(${PROJ_LIB_NAME} PRIVATE
+  ${OPENGL_LIBRARIES}
+  ${Vulkan_LIBRARIES}
   glfw
 )
