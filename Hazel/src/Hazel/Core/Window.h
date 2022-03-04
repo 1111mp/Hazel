@@ -2,6 +2,7 @@
 
 #include "Base.h"
 #include "Hazel/Events/Event.h"
+#include "Hazel/Renderer/GraphicsContext.h"
 
 namespace Hazel
 {
@@ -39,6 +40,7 @@ namespace Hazel
     virtual bool IsVSync() const = 0;
 		
 		virtual void* GetNativeWindow() const = 0;
+		virtual GraphicsContext* GetRendererContext() const = 0;
 
     static Scope<Window> Create(const WindowProps &props = WindowProps());
   };

@@ -3,6 +3,7 @@
 #include "Renderer.h"
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
+#include "Platform/Vulkan/VulkanBuffer.h"
 
 namespace Hazel {
 
@@ -18,6 +19,8 @@ namespace Hazel {
       return nullptr;
     case RendererAPI::API::OpenGL:
       return CreateRef<OpenGLVertexBuffer>(size);
+    case RendererAPI::API::Vulkan:
+      return CreateRef<VulkanVertexBuffer>(size);
     }
 
     HZ_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -33,6 +36,8 @@ namespace Hazel {
       return nullptr;
 			case RendererAPI::API::OpenGL:
       return CreateRef<OpenGLVertexBuffer>(vertices, size);
+      case RendererAPI::API::Vulkan:
+        return CreateRef<VulkanVertexBuffer>(vertices, size);
     }
 
     HZ_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -51,6 +56,8 @@ namespace Hazel {
       return nullptr;
 			case RendererAPI::API::OpenGL:
       return CreateRef<OpenGLIndexBuffer>(indices, count);
+      case RendererAPI::API::Vulkan:
+        return CreateRef<VulkanIndexBuffer>(indices, count);
     }
 
     HZ_CORE_ASSERT(false, "Unknown RendererAPI!");

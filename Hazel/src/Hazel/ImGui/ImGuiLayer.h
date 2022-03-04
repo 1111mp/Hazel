@@ -5,6 +5,7 @@
 #include "Hazel/Events/ApplicationEvent.h"
 #include "Hazel/Events/KeyEvent.h"
 #include "Hazel/Events/MouseEvent.h"
+#include "Hazel/Renderer/GraphicsContext.h"
 
 namespace Hazel {
   #define GLFW_HAS_GET_KEY_NAME (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100 >= 3200) // 3.2+ glfwGetKeyName()
@@ -12,8 +13,8 @@ namespace Hazel {
   class ImGuiLayer : public Layer
   {
   public:
-    ImGuiLayer();
-    ImGuiLayer(const std::string& ini);
+    ImGuiLayer(GraphicsContext* context);
+    ImGuiLayer(GraphicsContext* context, const std::string& ini);
     ~ImGuiLayer();
 
     virtual void OnAttach() override;
@@ -27,6 +28,7 @@ namespace Hazel {
 		
     void SetDarkThemeColors();
   private:
+    GraphicsContext* m_GraphicsContext = nullptr;
     std::string m_IniPath = "imgui.ini";
 		bool m_BlockEvents = true;
     float m_Time = 0.0f;

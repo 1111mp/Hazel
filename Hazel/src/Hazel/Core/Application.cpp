@@ -20,7 +20,8 @@ namespace Hazel {
 
     Renderer::Init();
 
-    m_ImGuiLayer = new ImGuiLayer(ini);
+    auto context = m_Window->GetRendererContext();
+    m_ImGuiLayer = new ImGuiLayer(context, ini);
     PushOverlay(m_ImGuiLayer);
   }
 

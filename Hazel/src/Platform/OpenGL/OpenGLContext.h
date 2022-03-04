@@ -15,6 +15,9 @@ namespace Hazel {
     virtual void SwapBuffers() override;
     virtual void Destory() override {};
 
+    virtual void FrameRender(ImDrawData*) override {};
+    virtual void FramePresent() override {};
+    virtual void InitForVulkan() override {};
   private:
     GLFWwindow* m_WindowHandle;
   };

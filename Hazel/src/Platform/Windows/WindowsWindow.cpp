@@ -48,26 +48,14 @@ namespace Hazel {
       int success = glfwInit();
       HZ_CORE_ASSERT(success, "Could not initialize GLFW!");
 
-      #if defined(IMGUI_IMPL_OPENGL_ES2)
-        // GL ES 2.0 + GLSL 100
-        //const char* glsl_version = "#version 100";
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-      #elif defined(__APPLE__)
-        // GL 3.2 + GLSL 150
-        //const char* glsl_version = "#version 150";
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
-      #else
-        // GL 3.0 + GLSL 130
-        //const char* glsl_version = "#version 130";
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-        //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
+      #if defined(HZ_RENDERER_OPENGL)
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+      #if defined(__APPLE__)
+      glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
+      #endif
+      #elif defined(HZ_RENDERER_VULKAN)
+      glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
       #endif
 
       glfwSetErrorCallback(GLFWErrorCallback);
@@ -199,10 +187,12 @@ namespace Hazel {
   {
     HZ_PROFILE_FUNCTION();
 
+    #ifdef HZ_RENDERER_OPENGL
     if (enabled)
       glfwSwapInterval(1);
     else
       glfwSwapInterval(0);
+    #endif
 
     m_Data.VSync = enabled;
   }

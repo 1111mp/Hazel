@@ -67,7 +67,7 @@ if(NOT DEFINED PROJECT_ARCH)
 endif()
 
 if(CMAKE_BUILD_TYPE AND (CMAKE_BUILD_TYPE STREQUAL "Debug"))
-  add_compile_definitions(HZ_ENABLE_ASSERTS HZ_DEBUG)
+  add_compile_definitions(HZ_ENABLE_ASSERTS HZ_DEBUG HZ_RENDERER_VULKAN)
 endif()
 
 function(assign_source_group)

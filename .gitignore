@@ -8,6 +8,7 @@
 /out
 HazelExports.h
 HazelConfig.h
+.vscode
 
 # Xcode
 *.DS_Store

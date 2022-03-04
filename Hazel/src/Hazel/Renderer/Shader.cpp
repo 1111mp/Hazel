@@ -2,6 +2,7 @@
 
 #include "Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Platform/Vulkan/VulkanShader.h"
 
 namespace Hazel {
 
@@ -13,6 +14,8 @@ namespace Hazel {
       return nullptr;
     case RendererAPI::API::OpenGL:
       return CreateRef<OpenGLShader>(filepath);
+    case RendererAPI::API::Vulkan:
+      return CreateRef<VulkanShader>(filepath);
     }
 
     HZ_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -27,6 +30,8 @@ namespace Hazel {
       return nullptr;
     case RendererAPI::API::OpenGL:
       return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
+    case RendererAPI::API::Vulkan:
+      return CreateRef<VulkanShader>(name, vertexSrc, fragmentSrc);
     }
 
     HZ_CORE_ASSERT(false, "Unknown RendererAPI!");

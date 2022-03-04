@@ -25,6 +25,7 @@ public:
 	bool IsVSync() const override;
 	
 	virtual void* GetNativeWindow() const override { return m_Window; }
+  virtual GraphicsContext* GetRendererContext() const override { return m_Context.get(); }
 private:
 	virtual void Init(const WindowProps& props);
 	virtual void Shutdown();

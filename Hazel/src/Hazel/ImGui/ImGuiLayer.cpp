@@ -1,8 +1,11 @@
 #include "ImGuiLayer.h"
 
-#include "imgui.h"
-#include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
+#if defined(HZ_RENDERER_OPENGL)
+  #include "backends/imgui_impl_opengl3.h"
+#elif defined(HZ_RENDERER_VULKAN)
+  #include "backends/imgui_impl_vulkan.h"
+#endif
 
 #include "Hazel/Core/Application.h"
 
@@ -11,13 +14,13 @@
 
 namespace Hazel {
 
-  ImGuiLayer::ImGuiLayer()
-    : Layer("ImGuiLayer")
+  ImGuiLayer::ImGuiLayer(GraphicsContext* context)
+    : Layer("ImGuiLayer"), m_GraphicsContext(context)
   {
   }
 
-  ImGuiLayer::ImGuiLayer(const std::string& ini)
-    : Layer("ImGuiLayer"), m_IniPath(ProjectSourceDir + ini)
+  ImGuiLayer::ImGuiLayer(GraphicsContext* context, const std::string& ini)
+    : Layer("ImGuiLayer"), m_GraphicsContext(context), m_IniPath(ProjectSourceDir + ini)
   {
   }
 
@@ -55,18 +58,26 @@ namespace Hazel {
 
     SetDarkThemeColors();
 
+    #if defined(HZ_RENDERER_OPENGL)
     Application& app = Application::Get();
     GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
-
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 450");
+    #elif defined(HZ_RENDERER_VULKAN)
+    m_GraphicsContext->InitForVulkan();
+    #endif
   }
 
   void ImGuiLayer::OnDetach()
   {
     HZ_PROFILE_FUNCTION();
 
+    
+    #if defined(HZ_RENDERER_OPENGL)
     ImGui_ImplOpenGL3_Shutdown();
+    #else defined(HZ_RENDERER_VULKAN)
+    ImGui_ImplVulkan_Shutdown();
+    #endif
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
   }
@@ -86,7 +97,11 @@ namespace Hazel {
     HZ_PROFILE_FUNCTION();
     ImGui::SaveIniSettingsToDisk(m_IniPath.c_str());
 
+    #if defined(HZ_RENDERER_OPENGL)
     ImGui_ImplOpenGL3_NewFrame();
+    #else defined(HZ_RENDERER_VULKAN)
+    ImGui_ImplVulkan_NewFrame();
+    #endif
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
   }
@@ -100,6 +115,8 @@ namespace Hazel {
     GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
 
     ImGui::Render();
+    
+    #if defined(HZ_RENDERER_OPENGL)
     int display_w, display_h;
     glfwGetFramebufferSize(window, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
@@ -112,6 +129,22 @@ namespace Hazel {
       ImGui::RenderPlatformWindowsDefault();
       glfwMakeContextCurrent(backup_current_context);
     }
+    #elif defined(HZ_RENDERER_VULKAN)
+    ImDrawData* main_draw_data = ImGui::GetDrawData();
+    const bool main_is_minimized = (main_draw_data->DisplaySize.x <= 0.0f || main_draw_data->DisplaySize.y <= 0.0f);
+    if (!main_is_minimized)
+      m_GraphicsContext->FrameRender(main_draw_data);
+
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+      ImGui::UpdatePlatformWindows();
+      ImGui::RenderPlatformWindowsDefault();
+    }
+
+    // Present Main Platform Window
+    if (!main_is_minimized)
+      m_GraphicsContext->FramePresent();
+    #endif
   }
 
   void ImGuiLayer::SetDarkThemeColors()

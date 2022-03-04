@@ -1,19 +1,17 @@
 #pragma once
 
+//#include <imgui.h>
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_vulkan.h"
+#define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-
-#include <optional>
 
 #include "Hazel/Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
 
 namespace Hazel {
-  #ifdef HZ_DEBUG
-    // —È÷§≤„
-  #define ENABLE_VALIDATION_LAYERS
-  #endif
 
   class VulkanContext : public GraphicsContext
   {
@@ -24,43 +22,32 @@ namespace Hazel {
     virtual void SwapBuffers() override;
 
     virtual void Destory() override;
+
+    virtual void FrameRender(ImDrawData* draw_data) override;
+    virtual void FramePresent() override;
+    virtual void InitForVulkan() override;
   private:
-    struct QueueFamilyIndices {
-      std::optional<uint32_t> graphicsFamily;
-      std::optional<uint32_t> presentFamily;
-
-      bool isComplete()
-      {
-        return graphicsFamily.has_value() && presentFamily.has_value();
-      }
-    };
-
-    struct SwapChainSupportDetails {
-      VkSurfaceCapabilitiesKHR capabilities;
-      std::vector<VkSurfaceFormatKHR> formats;
-      std::vector<VkPresentModeKHR> presentModes;
-    };
-  private:
-    void createInstance();
-    void pickPhysicalDevice();
-
-    std::vector<const char*> VulkanContext::getRequiredExtensions();
-    bool isDeviceSuitable(const VkPhysicalDevice& device);
-    VulkanContext::QueueFamilyIndices findQueueFamilies(const VkPhysicalDevice& device);
-    VulkanContext::SwapChainSupportDetails querySwapChainSupport(const VkPhysicalDevice& device);
-
-    #ifdef ENABLE_VALIDATION_LAYERS
-    void setupDebugMessenger();
-    #endif
+    void SetupVulkan(const char** extensions, uint32_t extensions_count);
+    void SetupVulkanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height);
+    void CleanupVulkanWindow();
+    void CleanupVulkan();
   private:
     GLFWwindow* m_WindowHandle;
-    VkInstance m_Instance;
-    VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
-    VkSurfaceKHR m_Surface;
 
-    #ifdef ENABLE_VALIDATION_LAYERS
-    VkDebugUtilsMessengerEXT m_DebugMessenger;
-    #endif
+    VkAllocationCallbacks* m_Allocator = NULL;
+    VkInstance m_Instance = VK_NULL_HANDLE;
+    VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
+    uint32_t m_QueueFamily = (uint32_t)-1;
+    VkDevice m_Device = VK_NULL_HANDLE;
+    VkQueue m_Queue = VK_NULL_HANDLE;
+    VkDebugReportCallbackEXT m_DebugReport = VK_NULL_HANDLE;
+    VkPipelineCache m_PipelineCache = VK_NULL_HANDLE;
+
+    VkDescriptorPool m_DescriptorPool = VK_NULL_HANDLE;
+
+    ImGui_ImplVulkanH_Window m_MainWindowData;
+    int m_MinImageCount = 2;
+    bool m_SwapChainRebuild = false;
   };
 
 }
