@@ -48,6 +48,11 @@ namespace Hazel {
     int w, h;
     glfwGetFramebufferSize(m_WindowHandle, &w, &h);
     ImGui_ImplVulkanH_Window* wd = &m_MainWindowData;
+    ImVec4 clear_color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+    wd->ClearValue.color.float32[0] = clear_color.x * clear_color.w;
+    wd->ClearValue.color.float32[1] = clear_color.y * clear_color.w;
+    wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
+    wd->ClearValue.color.float32[3] = clear_color.w;
     SetupVulkanWindow(wd, surface, w, h);
   }
 
@@ -121,9 +126,9 @@ namespace Hazel {
       check_vk_result(err);
       #else
       // Create Vulkan Instance without any debug feature
-      err = vkCreateInstance(&create_info, g_Allocator, &g_Instance);
+      err = vkCreateInstance(&create_info, m_Allocator, &m_Instance);
       check_vk_result(err);
-      IM_UNUSED(g_DebugReport);
+      IM_UNUSED(m_DebugReport);
       #endif
     }
 

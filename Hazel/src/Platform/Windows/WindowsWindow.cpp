@@ -4,8 +4,6 @@
 #include "Hazel/Events/KeyEvent.h"
 #include "Hazel/Events/MouseEvent.h"
 
-#include "Platform/OpenGL/OpenGLContext.h"
-
 namespace Hazel {
 
   static uint8_t s_GLFWWindowCount = 0;

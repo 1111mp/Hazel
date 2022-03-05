@@ -16,6 +16,8 @@ namespace Hazel {
 
   void TestLayer::OnUpdate(TimeStep ts)
   {
+    RenderCommand::SetColorClear({ 0.1f, 0.1f, 0.1f, 1.0f });
+    RenderCommand::Clear();
   }
 
   void TestLayer::OnImGuiRender()
