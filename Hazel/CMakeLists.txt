@@ -51,8 +51,9 @@ find_package(OpenGL REQUIRED)
 find_package(Vulkan REQUIRED)
 
 target_include_directories(${PROJ_LIB_NAME} PRIVATE
-  ${Vulkan_INCLUDE_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/src
+  "${Vulkan_INCLUDE_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src"
+  "${CMAKE_SOURCE_DIR}/Thirdparty/portable-file-dialogs"
 )
 
 target_link_libraries(${PROJ_LIB_NAME} PRIVATE

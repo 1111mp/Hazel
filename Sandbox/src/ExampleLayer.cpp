@@ -25,7 +25,7 @@ ExampleLayer::ExampleLayer()
   square_IB = Hazel::IndexBuffer::Create(squareIndices, 6);
   m_SquareVA->SetIndexBuffer(square_IB);
 
-  auto textureShader = m_ShaderLibrary.Load(AssetsDir + "/shaders/Texture.glsl");
+  auto textureShader = m_ShaderLibrary.Load(AssetsDir + "/shaders/OpenGL/Texture.glsl");
 
 
   m_Texture = Hazel::Texture2D::Create(AssetsDir + "/textures/Checkerboard.png");

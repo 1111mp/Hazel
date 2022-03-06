@@ -50,6 +50,7 @@ namespace Hazel {
       glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
       glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
       #if defined(__APPLE__)
+			
       glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
       #endif
       #elif defined(HZ_RENDERER_VULKAN)
