@@ -67,10 +67,16 @@ namespace Hazel {
 		}
 
 		m_Context = GraphicsContext::Create(m_Window);
+		m_Data.m_Context = m_Context.get();
 		m_Context->Init();
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
+
+		glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			data.m_Context->SetFramebufferResized(true);
+		});
 
 		// window resize event
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {

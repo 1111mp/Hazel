@@ -4,21 +4,23 @@
 
 struct GLFWwindow;
 
-namespace Hazel {
+namespace Hazel
+{
 
   class OpenGLContext : public GraphicsContext
   {
   public:
-    OpenGLContext(GLFWwindow* windowHandle);
+    OpenGLContext(GLFWwindow *windowHandle);
 
     virtual void Init() override;
     virtual void SwapBuffers() override;
-    virtual void Destory() override {};
+    virtual void Destory() override{};
 
-    virtual void FrameRender(ImDrawData*) override {};
-    virtual void FramePresent() override {};
-    virtual void InitForVulkan() override {};
+    virtual void InitForVulkan() override{};
+    virtual void DrawFrame() override{};
+    virtual void SetFramebufferResized(bool resized) override{};
+
   private:
-    GLFWwindow* m_WindowHandle;
+    GLFWwindow *m_WindowHandle;
   };
 }

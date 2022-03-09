@@ -63,7 +63,7 @@ if(NOT DEFINED PROJECT_ARCH)
 
   if(OS_MACOSX)
     # PROJECT_ARCH should be specified on Mac OS X.
-    message(WARNING "MacOS arch directory is Out!")
+    message("MacOS arch directory is Out!")
   endif()
 endif()
 

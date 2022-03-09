@@ -16,7 +16,7 @@ const std::string AssetsDir = ASSETS_DIR;
 // http://aicdg.com/debugbreak/
 
 #ifdef __APPLE__
-	#define DEBUGBREAK __builtin_debugtrap()
+	#define HZ_DEBUGBREAK __builtin_debugtrap()
 #elif HZ_PLATFORM_WINDOWS
 	#define HZ_DEBUGBREAK __debugbreak()
 #else
