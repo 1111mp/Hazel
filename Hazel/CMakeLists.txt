@@ -16,6 +16,11 @@ add_compile_definitions(GLFW_INCLUDE_NONE)
 
 file(GLOB_RECURSE ${PROJ_LIB_NAME}_HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h *.hpp)
 file(GLOB_RECURSE ${PROJ_LIB_NAME}_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp *.cpp)
+# ImGuizmo
+file(GLOB_RECURSE IMGUIZMO
+  ${CMAKE_SOURCE_DIR}/Thirdparty/ImGuizmo/ImGuizmo.h
+  ${CMAKE_SOURCE_DIR}/Thirdparty/ImGuizmo/ImGuizmo.cpp
+)
 
 source_group("Header Files" FILES ${${PROJ_LIB_NAME}_HEADER_FILES})
 source_group("Source Files" FILES ${${PROJ_LIB_NAME}_SOURCE_FILES})
@@ -33,6 +38,7 @@ endfunction(my_add_library)
 my_add_library(${PROJ_LIB_NAME} STATIC
   ${${PROJ_LIB_NAME}_HEADER_FILES}
   ${${PROJ_LIB_NAME}_SOURCE_FILES}
+  ${IMGUIZMO}
 )
 
 # set_property(TARGET ${PROJ_LIB_NAME} PROPERTY

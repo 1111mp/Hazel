@@ -11,6 +11,7 @@
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <ImGuizmo.h>
 
 namespace Hazel
 {
@@ -109,6 +110,7 @@ namespace Hazel
 #endif
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    ImGuizmo::BeginFrame();
   }
 
   void ImGuiLayer::End()

@@ -22,6 +22,8 @@
 #include "Hazel/Scene/ScriptableEntity.h"
 #include "Hazel/Scene/Components.h"
 
+#include "Hazel/Math/Math.h"
+
 #include "Hazel/Utils/PlatformUtils.h"
 
 // ---Renderer---------------------------------------------------

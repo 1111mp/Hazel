@@ -17,3 +17,6 @@
 [submodule "Thirdparty/portable-file-dialogs"]
 	path = Thirdparty/portable-file-dialogs
 	url = https://github.com/samhocevar/portable-file-dialogs
+[submodule "Thirdparty/ImGuizmo"]
+	path = Thirdparty/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo

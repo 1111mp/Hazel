@@ -4,7 +4,8 @@
 #include "Components.h"
 #include "Hazel/Renderer/Renderer2D.h"
 
-namespace Hazel {
+namespace Hazel
+{
 
   Scene::Scene()
   {
@@ -14,11 +15,11 @@ namespace Hazel {
   {
   }
 
-  Entity Scene::CreateEntity(const std::string& name)
+  Entity Scene::CreateEntity(const std::string &name)
   {
-    Entity entity = { m_Registry.create(), this };
+    Entity entity = {m_Registry.create(), this};
     entity.AddComponent<TransformComponent>();
-    auto& tag = entity.AddComponent<TagComponent>();
+    auto &tag = entity.AddComponent<TagComponent>();
     tag.Tag = name.empty() ? "Entity" : name;
     return entity;
   }
@@ -32,8 +33,8 @@ namespace Hazel {
   {
     // Update scripts
     {
-      m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
-        {
+      m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto &nsc)
+                                                    {
           // TODO: Move to Scene::OnScenePlay
           if (!nsc.Instance)
           {
@@ -42,12 +43,10 @@ namespace Hazel {
             nsc.Instance->OnCreate();
           }
 
-          nsc.Instance->OnUpdate(ts);
-        }
-      );
+          nsc.Instance->OnUpdate(ts); });
     }
 
-    Camera* mainCamera = nullptr;
+    Camera *mainCamera = nullptr;
     glm::mat4 cameraTransform;
     {
       auto view = m_Registry.view<TransformComponent, CameraComponent>();
@@ -88,45 +87,53 @@ namespace Hazel {
     auto view = m_Registry.view<CameraComponent>();
     for (auto entity : view)
     {
-      auto& cameraComponent = view.get<CameraComponent>(entity);
+      auto &cameraComponent = view.get<CameraComponent>(entity);
       if (!cameraComponent.FixedAspectRatio)
         cameraComponent.Camera.SetViewportSize(width, height);
     }
   }
 
-  template<typename T>
-  void Scene::OnComponentAdded(Entity entity, T& component)
+  Entity Scene::GetPrimaryCameraEntity()
+  {
+    auto view = m_Registry.view<CameraComponent>();
+    for (auto entity : view)
+    {
+      const auto &camera = view.get<CameraComponent>(entity);
+      if (camera.Primary)
+        return Entity{entity, this};
+    }
+    return {};
+  }
+
+  template <typename T>
+  void Scene::OnComponentAdded(Entity entity, T &component)
   {
     HZ_CORE_ASSERT(false);
   }
 
-  template<>
-  void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
+  template <>
+  void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent &component)
   {
-
   }
 
-  template<>
-  void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
+  template <>
+  void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent &component)
   {
     component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
   }
 
-  template<>
-  void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
+  template <>
+  void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent &component)
   {
-
   }
 
-  template<>
-  void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
+  template <>
+  void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent &component)
   {
-
   }
-  
-  template<>
-  void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
-  {
 
+  template <>
+  void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent &component)
+  {
   }
 }

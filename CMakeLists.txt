@@ -94,6 +94,7 @@ include_directories(
   "Thirdparty/stb_image"
   "Thirdparty/entt/include"
   "Thirdparty/yaml-cpp/include"
+  "Thirdparty/ImGuizmo"
 )
 
 # Include sub-projects.
