@@ -2,10 +2,11 @@
 
 #include <glad/glad.h>
 
-namespace Hazel {
+namespace Hazel
+{
 
-  OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec)
-    : m_Specification(spec)
+  OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification &spec)
+      : m_Specification(spec)
   {
     Invalidate();
   }
@@ -26,12 +27,16 @@ namespace Hazel {
       glDeleteTextures(1, &m_DepthAttachment);
     }
 
+#ifdef __APPLE__
+    glGenFramebuffers(1, &m_RendererID);
+#else
     glCreateFramebuffers(1, &m_RendererID);
+#endif
     glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 
     m_ColorAttachment = GenerateAttachmentTexture(false, false);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
-    
+
     m_DepthAttachment = GenerateAttachmentTexture(true, false);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
 
@@ -54,7 +59,7 @@ namespace Hazel {
   void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
   {
     m_Specification.Width = width;
-    m_Specification.Height= height;
+    m_Specification.Height = height;
 
     Invalidate();
   }
@@ -71,7 +76,7 @@ namespace Hazel {
     else if (!depth && stencil)
       attachment_type = GL_STENCIL_INDEX;
 
-    //Generate texture ID and load texture data 
+    // Generate texture ID and load texture data
     GLuint textureID;
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);

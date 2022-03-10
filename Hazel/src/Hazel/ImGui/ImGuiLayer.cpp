@@ -64,7 +64,11 @@ namespace Hazel
     Application &app = Application::Get();
     GLFWwindow *window = static_cast<GLFWwindow *>(app.GetWindow().GetNativeWindow());
     ImGui_ImplGlfw_InitForOpenGL(window, true);
+#ifdef __APPLE__
+    ImGui_ImplOpenGL3_Init("#version 330");
+#else
     ImGui_ImplOpenGL3_Init("#version 450");
+#endif
 #elif defined(HZ_RENDERER_VULKAN)
     m_GraphicsContext->InitForVulkan();
 #endif

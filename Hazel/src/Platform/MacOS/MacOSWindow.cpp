@@ -4,16 +4,17 @@
 #include "Hazel/Events/KeyEvent.h"
 #include "Hazel/Events/MouseEvent.h"
 
-namespace Hazel {
+namespace Hazel
+{
 
 	static uint8_t s_GLFWWindowCount = 0;
 
-	static void GLFWErrorCallback(int error_code, const char* description)
+	static void GLFWErrorCallback(int error_code, const char *description)
 	{
 		HZ_HAZEL_ERROR("GLFW ERROR ({0}): {1}", error_code, description);
 	}
 
-	MacOSWindow::MacOSWindow(const WindowProps& props)
+	MacOSWindow::MacOSWindow(const WindowProps &props)
 	{
 		HZ_PROFILE_FUNCTION();
 
@@ -27,7 +28,7 @@ namespace Hazel {
 		Shutdown();
 	}
 
-	void MacOSWindow::Init(const WindowProps& props)
+	void MacOSWindow::Init(const WindowProps &props)
 	{
 		HZ_PROFILE_FUNCTION();
 
@@ -46,16 +47,17 @@ namespace Hazel {
 			int success = glfwInit();
 			HZ_CORE_ASSERT(success, "Could not initialize GLFW!");
 
-			#if defined(HZ_RENDERER_OPENGL)
+#if defined(HZ_RENDERER_OPENGL)
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+#if defined(__APPLE__)
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // Required on Mac
+#else
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-			#if defined(__APPLE__)
-			
-			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
-			#endif
-			#elif defined(HZ_RENDERER_VULKAN)
+#endif
+#elif defined(HZ_RENDERER_VULKAN)
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-			#endif
+#endif
 
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
@@ -73,30 +75,31 @@ namespace Hazel {
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
-		glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+		glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow *window, int width, int height)
+																	 {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			data.m_Context->SetFramebufferResized(true);
-		});
+			data.m_Context->SetFramebufferResized(true); });
 
 		// window resize event
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow *window, int width, int height)
+															{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			data.Width = width;
 			data.Height = height;
 
 			WindowResizeEvent event(width, height);
-			data.EventCallback(event);
-			});
+			data.EventCallback(event); });
 
 		// window close event
-		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow *window)
+															 {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			WindowCloseEvent event;
-			data.EventCallback(event);
-			});
+			data.EventCallback(event); });
 
 		// key pressede
-		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+		glfwSetKeyCallback(m_Window, [](GLFWwindow *window, int key, int scancode, int action, int mods)
+											 {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
@@ -118,18 +121,18 @@ namespace Hazel {
 				data.EventCallback(event);
 				break;
 			}
-			}
-			});
+			} });
 
-		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode) {
+		glfwSetCharCallback(m_Window, [](GLFWwindow *window, unsigned int keycode)
+												{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			KeyTypedEvent event(keycode);
-			data.EventCallback(event);
-			});
+			data.EventCallback(event); });
 
 		// mouse pressed
-		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow *window, int button, int action, int mods)
+															 {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			switch (action) {
@@ -145,24 +148,23 @@ namespace Hazel {
 				data.EventCallback(event);
 				break;
 			}
-			}
-			});
+			} });
 
 		// scroll event
-		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset) {
+		glfwSetScrollCallback(m_Window, [](GLFWwindow *window, double xoffset, double yoffset)
+													{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			MouseScrolledEvent event((float)xoffset, (float)yoffset);
-			data.EventCallback(event);
-			});
+			data.EventCallback(event); });
 
 		// mouse moved
-		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos) {
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow *window, double xpos, double ypos)
+														 {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 			MouseMovedEvent event((float)xpos, (float)ypos);
-			data.EventCallback(event);
-			});
+			data.EventCallback(event); });
 	}
 
 	void MacOSWindow::Shutdown()
@@ -192,12 +194,12 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		#ifdef HZ_RENDERER_OPENGL
+#ifdef HZ_RENDERER_OPENGL
 		if (enabled)
 			glfwSwapInterval(1);
 		else
 			glfwSwapInterval(0);
-		#endif
+#endif
 
 		m_Data.VSync = enabled;
 	}
