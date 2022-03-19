@@ -71,7 +71,8 @@ if(CMAKE_BUILD_TYPE AND (CMAKE_BUILD_TYPE STREQUAL "Debug"))
   add_compile_definitions(HZ_ENABLE_ASSERTS HZ_DEBUG)
 endif()
 
-add_compile_definitions(HZ_RENDERER_OPENGL)
+# add_compile_definitions(HZ_RENDERER_OPENGL)
+add_compile_definitions(HZ_RENDERER_VULKAN)
 
 function(assign_source_group)
   foreach(_source IN ITEMS ${ARGN})

@@ -116,19 +116,19 @@ namespace Hazel
   {
     // Create DescriptorPool for m_ImGuiDescriptorPool
     {
-      VkDescriptorPoolSize pool_sizes[] =
-          {
-              {VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
-              {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
-              {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
-              {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
-              {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
-              {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
-              {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
-              {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
-              {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
-              {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
-              {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}};
+      VkDescriptorPoolSize pool_sizes[] = {
+          {VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
+          {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
+          {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
+          {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
+          {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
+          {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
+          {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
+          {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
+          {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
+          {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
+          {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000},
+      };
 
       VkDescriptorPoolCreateInfo pool_info = {};
       pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -142,65 +142,22 @@ namespace Hazel
 
     // Create RenderPass for m_ImGuiRenderPass
     {
-      VkAttachmentDescription depthAttachment{};
-      depthAttachment.format = FindDepthFormat();
-      depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-      depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-      depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-      depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-      depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-      depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-      depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-      VkAttachmentDescription colorAttachment{};
-      colorAttachment.format = m_SwapChainImageFormat;
-      colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-      colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-      colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-      colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-      colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-      colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-      colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-      VkAttachmentReference colorAttachmentRef{};
-      colorAttachmentRef.attachment = 0;
-      colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-      VkAttachmentReference depthAttachmentRef{};
-      depthAttachmentRef.attachment = 1;
-      depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-      VkSubpassDescription subpass{};
-      subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-      subpass.colorAttachmentCount = 1;
-      subpass.pColorAttachments = &colorAttachmentRef;
-      subpass.pDepthStencilAttachment = &depthAttachmentRef;
-
-      std::array<VkAttachmentDescription, 2> attachments = {colorAttachment, depthAttachment};
-      VkRenderPassCreateInfo renderPassInfo{};
-      renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-      renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-      renderPassInfo.pAttachments = attachments.data();
-      renderPassInfo.subpassCount = 1;
-      renderPassInfo.pSubpasses = &subpass;
-
-      VkSubpassDependency dependency{};
-      dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-      dependency.dstSubpass = 0;
-      dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-      dependency.srcAccessMask = 0;
-      dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-      dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-
-      renderPassInfo.dependencyCount = 1;
-      renderPassInfo.pDependencies = &dependency;
-
-      HZ_CORE_ASSERT(vkCreateRenderPass(m_Device, &renderPassInfo, nullptr, &m_ImGuiRenderPass) == VK_SUCCESS, "failed to create render pass!");
+      CreateImGuiRenderPass();
     }
 
     // Create CommandPool for m_ImGuiCommandPool
     {
       CreateCommandPool(&m_ImGuiCommandPool);
+    }
+
+    // Create CommandBuffers for m_ImGuiCommandBuffers
+    {
+      CreateImGuiCommandBuffers();
+    }
+
+    // Create FrameBuffers for m_ImGuiFramebuffers
+    {
+      CreateImGuiFramebuffers();
     }
 
     // Setup Platform/Renderer backends
@@ -210,12 +167,12 @@ namespace Hazel
     init_info.PhysicalDevice = m_PhysicalDevice;
     init_info.Device = m_Device;
     init_info.QueueFamily = m_QueueFamilyIndices.graphicsFamily.value();
-    init_info.Queue = m_PresentQueue;
+    init_info.Queue = m_GraphicsQueue;
     init_info.PipelineCache = VK_NULL_HANDLE;
     init_info.DescriptorPool = m_ImGuiDescriptorPool;
     init_info.Subpass = 0;
-    init_info.MinImageCount = MAX_FRAMES_IN_FLIGHT;
-    init_info.ImageCount = static_cast<uint32_t>(m_SwapChainImages.size());
+    init_info.MinImageCount = m_ImageCount;
+    init_info.ImageCount = m_ImageCount;
     init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
     init_info.Allocator = nullptr;
     init_info.CheckVkResultFn = nullptr;
@@ -232,19 +189,6 @@ namespace Hazel
 
   void VulkanContext::SwapBuffers()
   {
-    // Resize swap chain?
-    // if (m_SwapChainRebuild)
-    // {
-    //   int width, height;
-    //   glfwGetFramebufferSize(m_WindowHandle, &width, &height);
-    //   if (width > 0 && height > 0)
-    //   {
-    //     // ImGui_ImplVulkan_SetMinImageCount(m_MinImageCount);
-    //     // ImGui_ImplVulkanH_CreateOrResizeWindow(m_Instance, m_PhysicalDevice, m_Device, &m_MainWindowData, m_QueueFamily, m_Allocator, width, height, m_MinImageCount);
-    //     // m_MainWindowData.FrameIndex = 0;
-    //     m_SwapChainRebuild = false;
-    //   }
-    // }
   }
 
   void VulkanContext::DrawFrame()
@@ -267,8 +211,12 @@ namespace Hazel
     // Only reset the fence if we are submitting work
     vkResetFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame]);
 
+    // for swapchain
     vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
-    RecordCommandBuffer(m_CommandBuffers[m_CurrentFrame], imageIndex, m_DescriptorSets[m_CurrentFrame]);
+    RecordCommandBuffer(imageIndex);
+
+    // ImGui
+    RecordImGuiCommandBuffer(imageIndex);
 
     UpdateUniformBuffer(m_CurrentFrame);
 
@@ -277,11 +225,14 @@ namespace Hazel
 
     VkSemaphore waitSemaphores[] = {m_ImageAvailableSemaphores[m_CurrentFrame]};
     VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+
+    std::array<VkCommandBuffer, 2> cmdBuffers = {m_CommandBuffers[m_CurrentFrame], m_ImGuiCommandBuffers[m_CurrentFrame]};
+
     submitInfo.waitSemaphoreCount = 1;
     submitInfo.pWaitSemaphores = waitSemaphores;
     submitInfo.pWaitDstStageMask = waitStages;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &m_CommandBuffers[m_CurrentFrame];
+    submitInfo.commandBufferCount = static_cast<uint32_t>(cmdBuffers.size());
+    submitInfo.pCommandBuffers = cmdBuffers.data();
 
     VkSemaphore signalSemaphores[] = {m_RenderFinishedSemaphores[m_CurrentFrame]};
     submitInfo.signalSemaphoreCount = 1;
@@ -323,6 +274,15 @@ namespace Hazel
   {
     vkDeviceWaitIdle(m_Device);
 
+    ImGui_ImplVulkan_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
+    // ImGui
+    for (size_t i = 0; i < m_ImGuiFramebuffers.size(); i++)
+    {
+      vkDestroyFramebuffer(m_Device, m_ImGuiFramebuffers[i], nullptr);
+    }
     vkDestroyCommandPool(m_Device, m_ImGuiCommandPool, nullptr);
     vkDestroyRenderPass(m_Device, m_ImGuiRenderPass, nullptr);
 
@@ -334,7 +294,7 @@ namespace Hazel
     vkDestroyImage(m_Device, m_TextureImage, nullptr);
     vkFreeMemory(m_Device, m_TextureImageMemory, nullptr);
 
-    vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
+    // vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
     vkDestroyDescriptorPool(m_Device, m_ImGuiDescriptorPool, nullptr);
 
     vkDestroyDescriptorSetLayout(m_Device, m_DescriptorSetLayout, nullptr);
@@ -399,13 +359,13 @@ namespace Hazel
     allocInfo.commandBufferCount = 1;
 
     VkCommandBuffer commandBuffer;
-    vkAllocateCommandBuffers(m_Device, &allocInfo, &commandBuffer);
+    HZ_CORE_ASSERT(vkAllocateCommandBuffers(m_Device, &allocInfo, &commandBuffer) == VK_SUCCESS, "failed to allocate command buffers!");
 
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-    vkBeginCommandBuffer(commandBuffer, &beginInfo);
+    HZ_CORE_ASSERT(vkBeginCommandBuffer(commandBuffer, &beginInfo) == VK_SUCCESS, "failed to begin command buffer!");
 
     return commandBuffer;
   }
@@ -449,16 +409,48 @@ namespace Hazel
     CreateDescriptorPool();
     CreateDescriptorSets();
     CreateCommandBuffers();
+
+    // We also need to take care of the UI
+    ImGui_ImplVulkan_SetMinImageCount(m_ImageCount);
+    CreateImGuiRenderPass();
+    CreateImGuiFramebuffers();
+    CreateImGuiCommandBuffers();
   }
 
-  void VulkanContext::RecordCommandBuffer(const VkCommandBuffer &commandBuffer, const uint32_t &imageIndex, const VkDescriptorSet &descriptorSet)
+  void VulkanContext::RecordImGuiCommandBuffer(const uint32_t &imageIndex)
+  {
+    // vkResetCommandPool(m_Device, m_ImGuiCommandPool, 0);
+    VkCommandBufferBeginInfo info = {};
+    info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    vkBeginCommandBuffer(m_ImGuiCommandBuffers[m_CurrentFrame], &info);
+
+    VkRenderPassBeginInfo renderPassInfo = {};
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    renderPassInfo.renderPass = m_ImGuiRenderPass;
+    renderPassInfo.framebuffer = m_ImGuiFramebuffers[imageIndex];
+    renderPassInfo.renderArea.offset = {0, 0};
+    renderPassInfo.renderArea.extent = m_SwapChainExtent;
+    VkClearValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+    renderPassInfo.clearValueCount = 1;
+    renderPassInfo.pClearValues = &clearColor;
+    vkCmdBeginRenderPass(m_ImGuiCommandBuffers[m_CurrentFrame], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+    // Record dear imgui primitives into command buffer
+    ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), m_ImGuiCommandBuffers[m_CurrentFrame]);
+
+    vkCmdEndRenderPass(m_ImGuiCommandBuffers[m_CurrentFrame]);
+    HZ_CORE_ASSERT(vkEndCommandBuffer(m_ImGuiCommandBuffers[m_CurrentFrame]) == VK_SUCCESS, "Failed to record ImGui command buffers!")
+  }
+
+  void VulkanContext::RecordCommandBuffer(const uint32_t &imageIndex)
   {
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags = 0;                  // Optional
     beginInfo.pInheritanceInfo = nullptr; // Optional
 
-    HZ_CORE_ASSERT(vkBeginCommandBuffer(commandBuffer, &beginInfo) == VK_SUCCESS, "failed to begin recording command buffer!");
+    HZ_CORE_ASSERT(vkBeginCommandBuffer(m_CommandBuffers[m_CurrentFrame], &beginInfo) == VK_SUCCESS, "failed to begin recording command buffer!");
 
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -474,22 +466,22 @@ namespace Hazel
     renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
     renderPassInfo.pClearValues = clearValues.data();
 
-    vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+    vkCmdBeginRenderPass(m_CommandBuffers[m_CurrentFrame], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
+    vkCmdBindPipeline(m_CommandBuffers[m_CurrentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
 
     VkBuffer vertexBuffers[] = {m_VertexBuffer};
     VkDeviceSize offsets[] = {0};
-    vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+    vkCmdBindVertexBuffers(m_CommandBuffers[m_CurrentFrame], 0, 1, vertexBuffers, offsets);
 
-    vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer, 0, VK_INDEX_TYPE_UINT16);
-    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
+    vkCmdBindIndexBuffer(m_CommandBuffers[m_CurrentFrame], m_IndexBuffer, 0, VK_INDEX_TYPE_UINT16);
+    vkCmdBindDescriptorSets(m_CommandBuffers[m_CurrentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0, 1, &m_DescriptorSets[m_CurrentFrame], 0, nullptr);
 
-    vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+    vkCmdDrawIndexed(m_CommandBuffers[m_CurrentFrame], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 
-    vkCmdEndRenderPass(commandBuffer);
+    vkCmdEndRenderPass(m_CommandBuffers[m_CurrentFrame]);
 
-    HZ_CORE_ASSERT(vkEndCommandBuffer(commandBuffer) == VK_SUCCESS, "failed to record command buffer!");
+    HZ_CORE_ASSERT(vkEndCommandBuffer(m_CommandBuffers[m_CurrentFrame]) == VK_SUCCESS, "failed to record command buffer!");
   }
 
   void VulkanContext::UpdateUniformBuffer(const uint32_t &currentImage)
@@ -513,8 +505,6 @@ namespace Hazel
 
   void VulkanContext::CleanupSwapChain()
   {
-    vkFreeCommandBuffers(m_Device, m_CommandPool, m_CommandBuffers.size(), m_CommandBuffers.data());
-
     vkDestroyImageView(m_Device, m_DepthImageView, nullptr);
     vkDestroyImage(m_Device, m_DepthImage, nullptr);
     vkFreeMemory(m_Device, m_DepthImageMemory, nullptr);
@@ -541,6 +531,8 @@ namespace Hazel
       vkDestroyBuffer(m_Device, m_UniformBuffers[i], nullptr);
       vkFreeMemory(m_Device, m_UniformBuffersMemory[i], nullptr);
     }
+
+    vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
   }
 
   void VulkanContext::DestroyDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerEXT &debugMessenger, const VkAllocationCallbacks *pAllocator)
@@ -682,16 +674,16 @@ namespace Hazel
     VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
     VkExtent2D extent = ChooseSwapExtent(swapChainSupport.capabilities);
 
-    uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
-    if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
+    m_ImageCount = swapChainSupport.capabilities.minImageCount + 1;
+    if (swapChainSupport.capabilities.maxImageCount > 0 && m_ImageCount > swapChainSupport.capabilities.maxImageCount)
     {
-      imageCount = swapChainSupport.capabilities.maxImageCount;
+      m_ImageCount = swapChainSupport.capabilities.maxImageCount;
     }
 
     VkSwapchainCreateInfoKHR createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     createInfo.surface = m_Surface;
-    createInfo.minImageCount = imageCount;
+    createInfo.minImageCount = m_ImageCount;
     createInfo.imageFormat = surfaceFormat.format;
     createInfo.imageColorSpace = surfaceFormat.colorSpace;
     createInfo.imageExtent = extent;
@@ -721,9 +713,10 @@ namespace Hazel
 
     HZ_CORE_ASSERT(vkCreateSwapchainKHR(m_Device, &createInfo, nullptr, &m_SwapChain) == VK_SUCCESS, "failed to create swap chain!");
 
-    vkGetSwapchainImagesKHR(m_Device, m_SwapChain, &imageCount, nullptr);
-    m_SwapChainImages.resize(imageCount);
-    vkGetSwapchainImagesKHR(m_Device, m_SwapChain, &imageCount, m_SwapChainImages.data());
+    uint32_t swapchainCount;
+    vkGetSwapchainImagesKHR(m_Device, m_SwapChain, &swapchainCount, nullptr);
+    m_SwapChainImages.resize(swapchainCount);
+    vkGetSwapchainImagesKHR(m_Device, m_SwapChain, &swapchainCount, m_SwapChainImages.data());
 
     m_SwapChainImageFormat = surfaceFormat.format;
     m_SwapChainExtent = extent;
@@ -739,60 +732,115 @@ namespace Hazel
     }
   }
 
-  void VulkanContext::CreateRenderPass()
+  void VulkanContext::CreateImGuiRenderPass()
   {
-    VkAttachmentDescription depthAttachment{};
-    depthAttachment.format = FindDepthFormat();
-    depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-    depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    VkAttachmentDescription attachment = {};
+    attachment.format = m_SwapChainImageFormat;
+    attachment.samples = VK_SAMPLE_COUNT_1_BIT;
+    attachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+    attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-    VkAttachmentDescription colorAttachment{};
-    colorAttachment.format = m_SwapChainImageFormat;
-    colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-    colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    VkAttachmentReference color_attachment = {};
+    color_attachment.attachment = 0;
+    color_attachment.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-    VkAttachmentReference colorAttachmentRef{};
-    colorAttachmentRef.attachment = 0;
-    colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-    VkAttachmentReference depthAttachmentRef{};
-    depthAttachmentRef.attachment = 1;
-    depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-    VkSubpassDescription subpass{};
+    VkSubpassDescription subpass = {};
     subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpass.colorAttachmentCount = 1;
-    subpass.pColorAttachments = &colorAttachmentRef;
-    subpass.pDepthStencilAttachment = &depthAttachmentRef;
+    subpass.pColorAttachments = &color_attachment;
 
-    std::array<VkAttachmentDescription, 2> attachments = {colorAttachment, depthAttachment};
-    VkRenderPassCreateInfo renderPassInfo{};
+    VkSubpassDependency dependency = {};
+    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+    dependency.dstSubpass = 0;
+    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.srcAccessMask = 0; // or VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+    VkRenderPassCreateInfo info = {};
+    info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    info.attachmentCount = 1;
+    info.pAttachments = &attachment;
+    info.subpassCount = 1;
+    info.pSubpasses = &subpass;
+    info.dependencyCount = 1;
+    info.pDependencies = &dependency;
+
+    HZ_CORE_ASSERT(vkCreateRenderPass(m_Device, &info, nullptr, &m_ImGuiRenderPass) == VK_SUCCESS, "failed to create render pass!");
+  }
+
+  void VulkanContext::CreateRenderPass()
+  {
+    std::array<VkAttachmentDescription, 2> attachments = {};
+    // Color attachment
+    attachments[0].format = m_SwapChainImageFormat;
+    attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachments[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    // Depth attachment
+    attachments[1].format = FindDepthFormat();
+    attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    attachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    VkAttachmentReference colorReference = {};
+    colorReference.attachment = 0;
+    colorReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    VkAttachmentReference depthReference = {};
+    depthReference.attachment = 1;
+    depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    VkSubpassDescription subpassDescription = {};
+    subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpassDescription.colorAttachmentCount = 1;
+    subpassDescription.pColorAttachments = &colorReference;
+    subpassDescription.pDepthStencilAttachment = &depthReference;
+    subpassDescription.inputAttachmentCount = 0;
+    subpassDescription.pInputAttachments = nullptr;
+    subpassDescription.preserveAttachmentCount = 0;
+    subpassDescription.pPreserveAttachments = nullptr;
+    subpassDescription.pResolveAttachments = nullptr;
+
+    // Subpass dependencies for layout transitions
+    std::array<VkSubpassDependency, 2> dependencies;
+
+    dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+    dependencies[0].dstSubpass = 0;
+    dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    dependencies[1].srcSubpass = 0;
+    dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+    dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependencies[1].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+    dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    VkRenderPassCreateInfo renderPassInfo = {};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
     renderPassInfo.pAttachments = attachments.data();
     renderPassInfo.subpassCount = 1;
-    renderPassInfo.pSubpasses = &subpass;
-
-    VkSubpassDependency dependency{};
-    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-    dependency.dstSubpass = 0;
-    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-    dependency.srcAccessMask = 0;
-    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-
-    renderPassInfo.dependencyCount = 1;
-    renderPassInfo.pDependencies = &dependency;
+    renderPassInfo.pSubpasses = &subpassDescription;
+    renderPassInfo.dependencyCount = static_cast<uint32_t>(dependencies.size());
+    renderPassInfo.pDependencies = dependencies.data();
 
     HZ_CORE_ASSERT(vkCreateRenderPass(m_Device, &renderPassInfo, nullptr, &m_RenderPass) == VK_SUCCESS, "failed to create render pass!");
   }
@@ -995,6 +1043,28 @@ namespace Hazel
       framebufferInfo.layers = 1;
 
       HZ_CORE_ASSERT(vkCreateFramebuffer(m_Device, &framebufferInfo, nullptr, &m_SwapChainFramebuffers[i]) == VK_SUCCESS, "failed to create framebuffer!");
+    }
+  }
+
+  void VulkanContext::CreateImGuiFramebuffers()
+  {
+    // Create some UI framebuffers. These will be used in the render pass for the UI
+    m_ImGuiFramebuffers.resize(m_SwapChainImageViews.size());
+
+    VkImageView attachment[1];
+
+    VkFramebufferCreateInfo framebufferInfo{};
+    framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    framebufferInfo.renderPass = m_ImGuiRenderPass;
+    framebufferInfo.attachmentCount = 1;
+    framebufferInfo.pAttachments = attachment;
+    framebufferInfo.width = m_SwapChainExtent.width;
+    framebufferInfo.height = m_SwapChainExtent.height;
+    framebufferInfo.layers = 1;
+    for (size_t i = 0; i < m_SwapChainImageViews.size(); i++)
+    {
+      attachment[0] = m_SwapChainImageViews[i];
+      HZ_CORE_ASSERT(vkCreateFramebuffer(m_Device, &framebufferInfo, nullptr, &m_ImGuiFramebuffers[i]) == VK_SUCCESS, "failed to create ImGui framebuffer!");
     }
   }
 
@@ -1206,6 +1276,19 @@ namespace Hazel
     allocInfo.commandBufferCount = (uint32_t)m_CommandBuffers.size();
 
     HZ_CORE_ASSERT(vkAllocateCommandBuffers(m_Device, &allocInfo, m_CommandBuffers.data()) == VK_SUCCESS, "failed to allocate command buffers!");
+  }
+
+  void VulkanContext::CreateImGuiCommandBuffers()
+  {
+    m_ImGuiCommandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+
+    VkCommandBufferAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocInfo.commandPool = m_ImGuiCommandPool;
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocInfo.commandBufferCount = (uint32_t)m_ImGuiCommandBuffers.size();
+
+    HZ_CORE_ASSERT(vkAllocateCommandBuffers(m_Device, &allocInfo, m_ImGuiCommandBuffers.data()) == VK_SUCCESS, "failed to allocate command buffers!");
   }
 
   void VulkanContext::CreateSyncObjects()
@@ -1524,10 +1607,7 @@ namespace Hazel
     imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-    if (vkCreateImage(m_Device, &imageInfo, nullptr, &image) != VK_SUCCESS)
-    {
-      throw std::runtime_error("failed to create image!");
-    }
+    HZ_CORE_ASSERT(vkCreateImage(m_Device, &imageInfo, nullptr, &image) == VK_SUCCESS, "failed to create image!");
 
     VkMemoryRequirements memRequirements;
     vkGetImageMemoryRequirements(m_Device, image, &memRequirements);

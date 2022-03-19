@@ -2,7 +2,7 @@
 
 //#include <imgui.h>
 #include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_vulkan.h"
+#include "imgui_impl_vulkan.h"
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -58,11 +58,13 @@ namespace Hazel
     void CreateSwapChain();
     void CreateImageViews();
     void CreateRenderPass();
+    void CreateImGuiRenderPass();
     void CreateDescriptorSetLayout();
     void CreateGraphicsPipeline();
     void CreateCommandPool(VkCommandPool *cmdPool);
     void CreateDepthResources();
     void CreateFramebuffers();
+    void CreateImGuiFramebuffers();
     void CreateTextureImage();
     void CreateTextureImageView();
     void CreateTextureSampler();
@@ -72,11 +74,13 @@ namespace Hazel
     void CreateDescriptorPool();
     void CreateDescriptorSets();
     void CreateCommandBuffers();
+    void CreateImGuiCommandBuffers();
     void CreateSyncObjects();
 
     void RecreateSwapChain();
     void CleanupSwapChain();
-    void RecordCommandBuffer(const VkCommandBuffer &commandBuffer, const uint32_t &imageIndex, const VkDescriptorSet &descriptorSet);
+    void RecordCommandBuffer(const uint32_t &imageIndex);
+    void RecordImGuiCommandBuffer(const uint32_t &imageIndex);
     void UpdateUniformBuffer(const uint32_t &currentImage);
     void DestroyDebugUtilsMessengerEXT(const VkInstance &instance, const VkDebugUtilsMessengerEXT &debugMessenger, const VkAllocationCallbacks *pAllocator);
 
@@ -126,6 +130,7 @@ namespace Hazel
     VkPipelineLayout m_PipelineLayout;
     VkPipeline m_GraphicsPipeline;
     std::vector<VkFramebuffer> m_SwapChainFramebuffers;
+    std::vector<VkFramebuffer> m_ImGuiFramebuffers;
     VkCommandPool m_CommandPool;
     VkCommandPool m_ImGuiCommandPool;
 
@@ -155,6 +160,7 @@ namespace Hazel
     std::vector<VkFence> m_InFlightFences;
 
     uint32_t m_CurrentFrame = 0;
+    uint32_t m_ImageCount = 2;
     bool m_FramebufferResized = false;
 
     const std::vector<const char *> m_DeviceExtensions = {

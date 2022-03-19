@@ -4,7 +4,7 @@
 #if defined(HZ_RENDERER_OPENGL)
 #include "backends/imgui_impl_opengl3.h"
 #elif defined(HZ_RENDERER_VULKAN)
-#include "backends/imgui_impl_vulkan.h"
+#include "Platform/Vulkan/imgui_impl_vulkan.h"
 #endif
 
 #include "Hazel/Core/Application.h"
@@ -81,12 +81,12 @@ namespace Hazel
 
 #if defined(HZ_RENDERER_OPENGL)
     ImGui_ImplOpenGL3_Shutdown();
-#elif defined(HZ_RENDERER_VULKAN)
-    ImGui_ImplVulkan_Shutdown();
-#endif
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-  }
+#elif defined(HZ_RENDERER_VULKAN)
+    // ImGui_ImplVulkan_Shutdown();
+#endif
+    }
 
   void ImGuiLayer::OnEvent(Event &e)
   {
@@ -117,13 +117,13 @@ namespace Hazel
   {
     HZ_PROFILE_FUNCTION();
 
+    ImGui::Render();
+
+#if defined(HZ_RENDERER_OPENGL)
     ImGuiIO &io = ImGui::GetIO();
     Application &app = Application::Get();
     GLFWwindow *window = static_cast<GLFWwindow *>(app.GetWindow().GetNativeWindow());
 
-    ImGui::Render();
-
-#if defined(HZ_RENDERER_OPENGL)
     int display_w, display_h;
     glfwGetFramebufferSize(window, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
@@ -137,12 +137,12 @@ namespace Hazel
       glfwMakeContextCurrent(backup_current_context);
     }
 #elif defined(HZ_RENDERER_VULKAN)
+    ImGuiIO &io = ImGui::GetIO();
+
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
-      GLFWwindow *backup_current_context = glfwGetCurrentContext();
       ImGui::UpdatePlatformWindows();
       ImGui::RenderPlatformWindowsDefault();
-      glfwMakeContextCurrent(backup_current_context);
     }
     m_GraphicsContext->DrawFrame();
 #endif
