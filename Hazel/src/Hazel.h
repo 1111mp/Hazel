@@ -39,6 +39,7 @@
 #include "Hazel/Renderer/SubTexture2D.h"
 #include "Hazel/Renderer/VertexArray.h"
 
+#include "Hazel/Renderer/EditorCamera.h"
 #include "Hazel/Renderer/OrthographicCamera.h"
 
 // --------------------------------------------------------------

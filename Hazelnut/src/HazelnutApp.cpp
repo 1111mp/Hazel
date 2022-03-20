@@ -1,8 +1,8 @@
 #include <Hazel.h>
 #include <Hazel/Core/EntryPoint.h>
 
-// #include "EditorLayer.h"
-#include "TestLayer.h"
+#include "EditorLayer.h"
+// #include "TestLayer.h"
 
 // #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" ) // ������ڵ�ַ
 
@@ -14,7 +14,7 @@ namespace Hazel {
     Hazelnut()
       : Application("Hazel Editor", "/Hazelnut/imgui.ini")
     {
-      PushLayer(new TestLayer());
+      PushLayer(new EditorLayer());
     }
 
     ~Hazelnut()

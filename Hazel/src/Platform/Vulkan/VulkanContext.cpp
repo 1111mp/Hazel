@@ -212,7 +212,6 @@ namespace Hazel
     vkResetFences(m_Device, 1, &m_InFlightFences[m_CurrentFrame]);
 
     // for swapchain
-    vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
     RecordCommandBuffer(imageIndex);
 
     // ImGui
@@ -420,6 +419,7 @@ namespace Hazel
   void VulkanContext::RecordImGuiCommandBuffer(const uint32_t &imageIndex)
   {
     // vkResetCommandPool(m_Device, m_ImGuiCommandPool, 0);
+    
     VkCommandBufferBeginInfo info = {};
     info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
@@ -445,6 +445,8 @@ namespace Hazel
 
   void VulkanContext::RecordCommandBuffer(const uint32_t &imageIndex)
   {
+    // vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
+
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags = 0;                  // Optional
