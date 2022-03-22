@@ -11,7 +11,7 @@ namespace Hazel
 {
 
   EditorLayer::EditorLayer()
-      : Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f, true)
+      : Layer("EditorLayer"), m_CameraController(1600.0f / 900.0f, true)
   {
   }
 
@@ -22,13 +22,14 @@ namespace Hazel
     m_CheckerboardTexture = Texture2D::Create(AssetsDir + "/textures/Checkerboard.png");
 
     FramebufferSpecification fbSpec;
-    fbSpec.Width = 1280;
-    fbSpec.Height = 720;
+    fbSpec.Attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::Depth};
+    fbSpec.Width = 1600;
+    fbSpec.Height = 900;
     m_Framebuffer = Framebuffer::Create(fbSpec);
 
     m_ActiveScene = CreateRef<Scene>();
 
-    m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+    m_EditorCamera = EditorCamera(30.0f, 1600.0f / 900.0f, 0.1f, 1000.0f);
 
 #if 0
       auto square = m_ActiveScene->CreateEntity("Green Square");
