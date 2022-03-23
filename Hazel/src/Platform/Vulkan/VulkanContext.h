@@ -6,6 +6,8 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#include <optional>
+
 #include "Hazel/Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
