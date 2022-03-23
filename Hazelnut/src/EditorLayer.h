@@ -36,6 +36,8 @@ namespace Hazel
     Entity m_SquareEntity;
     Entity m_CameraEntity;
 
+    Entity m_HoveredEntity;
+
     EditorCamera m_EditorCamera;
 
     Ref<Texture2D> m_CheckerboardTexture;
