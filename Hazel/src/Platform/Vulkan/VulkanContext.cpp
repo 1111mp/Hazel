@@ -419,7 +419,7 @@ namespace Hazel
   void VulkanContext::RecordImGuiCommandBuffer(const uint32_t &imageIndex)
   {
     // vkResetCommandPool(m_Device, m_ImGuiCommandPool, 0);
-    
+
     VkCommandBufferBeginInfo info = {};
     info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
@@ -1579,6 +1579,7 @@ namespace Hazel
     }
 
     HZ_CORE_ASSERT(false, "failed to find suitable memory type!");
+    return 0;
   }
 
   void VulkanContext::CopyBuffer(const VkBuffer &srcBuffer, const VkBuffer &dstBuffer, const VkDeviceSize &size)
